@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
+//me cago en mi prima como no se cambie
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
