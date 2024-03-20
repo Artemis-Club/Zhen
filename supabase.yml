@@ -1,0 +1,25 @@
+name: Update Supabase on Push
+
+on:
+  push:
+    branches:
+      - main  # puedes cambiar esto según la rama que desees monitorear
+
+jobs:
+  update_supabase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Supabase CLI
+        run: npm install -g supabase
+
+      - name: Update Supabase data
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          supabase init
+          supabase update --data your_data_to_update.json
