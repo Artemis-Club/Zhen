@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
+
 //me cago en mi prima como no se cambie
 
 void main() {
@@ -16,7 +17,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
 
-
+  final DBService dbService;
+  MyApp({required this.dbService});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

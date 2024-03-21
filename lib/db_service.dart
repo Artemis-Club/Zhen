@@ -4,12 +4,12 @@ import 'package:supabase/supabase.dart';
 import 'dart:io';
 
 class DBService {
-  final SupabaseClient_client;
+  final SupabaseClient;
 
-  DBService(this.SupabaseClient_client);
+  DBService(this.SupabaseClient);
 
   Future<void> addUser() async {
-    final response = await SupabaseClient_client
+    final response = await SupabaseClient
         .from('users')
         .insert({'username': 'johndoe', 'status': 'ONLINE'})
         .execute();
@@ -19,7 +19,7 @@ class DBService {
     }
   }
   Future<void> getUsers() async {
-    final response = await SupabaseClient_client
+    final response = await SupabaseClient
         .from('users')
         .select()
         .execute();
@@ -33,7 +33,7 @@ class DBService {
     }
   }
   Future<void> updateUser(String userId) async {
-    final response = await SupabaseClient_client
+    final response = await SupabaseClient
         .from('users')
         .update({'status': 'OFFLINE'})
         .match({'id': userId})
@@ -44,7 +44,7 @@ class DBService {
     }
   }
   Future<void> deleteUser(String userId) async {
-    final response = await SupabaseClient_client
+    final response = await SupabaseClient
         .from('users')
         .delete()
         .match({'id': userId})
@@ -55,7 +55,7 @@ class DBService {
     }
   }
   void realtimeSubscription() {
-    SupabaseClient_client
+    SupabaseClient
         .from('users')
         .on(SupabaseEventTypes.insert, (payload) {
       // Handle real-time insert event
@@ -64,7 +64,7 @@ class DBService {
   }
   Future<void> uploadFile(String filePath, String fileName) async {
     final file = File(filePath);
-    final response = await SupabaseClient_client.storage
+    final response = await SupabaseClient.storage
         .from('avatars')
         .upload(fileName, file);
 
@@ -73,7 +73,7 @@ class DBService {
     }
   }
   Future<String?> downloadFile(String fileName) async {
-    final response = await SupabaseClient_client.storage
+    final response = await SupabaseClient.storage
         .from('avatars')
         .download(fileName);
 
