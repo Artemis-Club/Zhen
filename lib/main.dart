@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
+import 'package:flutter/cupertino.dart';
 
 
 //me cago en mi prima como no se cambie
@@ -132,8 +133,31 @@ class Screen1 extends StatelessWidget {
 class Screen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Pantalla 2'),
+    return CupertinoPageScaffold(
+
+      child: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el padding horizontal para controlar el ancho
+              child: CupertinoSearchTextField(
+                placeholder: 'Buscar',
+                onChanged: (value) {
+                  // Aquí puedes manejar los cambios en el texto de búsqueda
+                },
+                onSubmitted: (value) {
+                  // Aquí puedes manejar la acción de enviar el texto de búsqueda
+                },
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Text('Contenido debajo de la barra de búsqueda'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -146,11 +170,100 @@ class Screen3 extends StatelessWidget {
     );
   }
 }
+
 class Screen4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-    child: Text('Pantalla 4'),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Ajustes'),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // Círculo con foto de perfil
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage('https://example.com/path/to/profile/image.jpg'), // Reemplaza con la URL de tu imagen de perfil
+              ),
+            ),
+            // Texto debajo del círculo
+            Text(
+              'Nombre de Usuario',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            // Cuadro con filas para las opciones centrado
+            SizedBox(height: 20),
+            Container(
+              width: 500,
+              decoration: BoxDecoration(
+                color: CupertinoColors.white, // Color de fondo del cuadro
+                borderRadius: BorderRadius.circular(10), // Radio del borde redondeado
+                border: Border.all(
+                  color: CupertinoColors.systemGrey4, // Color del contorno
+                  width: 1, // Ancho del contorno
+                ),
+              ),// Ajusta el ancho según sea necesario
+              child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(top: 0),
+                children: <Widget>[
+                  CupertinoListTile(
+                    title: Text('General'),
+                    onTap: () {
+                      // Agregar funcionalidad aquí
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: CupertinoColors.systemGrey4,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  CupertinoListTile(
+                    title: Text('Permisos'),
+                    onTap: () {
+                      // Agregar funcionalidad aquí
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: CupertinoColors.systemGrey4,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  CupertinoListTile(
+                    title: Text('Notificaciones'),
+                    onTap: () {
+                      // Agregar funcionalidad aquí
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: CupertinoColors.systemGrey4,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  CupertinoListTile(
+                    title: Text('Informacion Personal'),
+                    onTap: () {
+                      // Agregar funcionalidad aquí
+                    },
+                  ),
+                  // Agrega más CupertinoListTile según sea necesario
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
+
