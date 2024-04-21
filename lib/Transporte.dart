@@ -9,8 +9,13 @@ class TransporteScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(height: 65.0,)
-
+          SizedBox(height: 65.0,),
+          Image(
+            image: AssetImage("images/566499.png"),
+            width: 120.0,
+            height: 120.0,
+            alignment:Alignment.center,
+          ),
         ],
       ),
     );
