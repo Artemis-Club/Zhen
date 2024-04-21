@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:codethon_project_dart/global/global_var.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'global_var.dart';
 
 //me cago en mi prima como no se cambie
 
@@ -22,6 +26,7 @@ class MyApp extends StatelessWidget {
   final DBService dbService;
   MyApp({required this.dbService});
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -69,6 +74,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
+
   int _currentIndex = 0;
   final List<Widget> _children = [
     Screen1(),
@@ -131,11 +139,13 @@ class Screen1 extends StatelessWidget {
 }
 
 class Screen2 extends StatelessWidget {
+  final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
+  GoogleMapController? controllerGoogleMap;
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return Scaffold(
 
-      child: SafeArea(
+      /*child: SafeArea(
         child: Column(
           children: <Widget>[
             Padding(
@@ -151,14 +161,23 @@ class Screen2 extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Center(
-                child: Text('Contenido debajo de la barra de búsqueda'),
+              child: Center(*/
+                body: Stack(
+                  children: [
+                    GoogleMap(
+                      mapType: MapType.normal,
+                      myLocationEnabled: true,
+                      initialCameraPosition: googlePlexInitialPosition,
+                      onMapCreated: (GoogleMapController mapController){
+                        controllerGoogleMap = mapController;
+                        googleMapCompleterController.complete(controllerGoogleMap);
+                      },
+
+                    ),
+                  ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            );
+
   }
 }
 
