@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: SettingsScreen(),
     );
   }
 }
 
 class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -51,26 +55,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ajustes'),
+        title: const Text('Ajustes'),
       ),
       body: ListView(
         children: [
           SwitchListTile(
-            title: Text('Activar notificaciones'),
+            title: const Text('Activar notificaciones'),
             value: _isNotificationsEnabled,
             onChanged: (bool newValue) {
               _saveSetting('notifications', newValue);
             },
           ),
           SwitchListTile(
-            title: Text('Tema oscuro'),
+            title: const Text('Tema oscuro'),
             value: _isDarkTheme,
             onChanged: (bool newValue) {
               _saveSetting('darkTheme', newValue);
             },
           ),
           ListTile(
-            title: Text('Idioma'),
+            title: const Text('Idioma'),
             subtitle: Text(_language),
             onTap: () => _changeLanguage(),
           ),
@@ -84,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Selecciona un idioma'),
+          title: const Text('Selecciona un idioma'),
           content: DropdownButton<String>(
             value: _language,
             onChanged: (String? newValue) {

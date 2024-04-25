@@ -9,7 +9,7 @@ class TransporteScreen extends StatelessWidget {
   const TransporteScreen({super.key});
 
   Future<String> weather() async{
-    WeatherFactory wf = new WeatherFactory('1fc6a21d7c1a05d3aff1156d71ff425f', language: Language.SPANISH);
+    WeatherFactory wf = WeatherFactory('1fc6a21d7c1a05d3aff1156d71ff425f', language: Language.SPANISH);
     Weather w = await wf.currentWeatherByCityName("Valencia");
     return w.toString();
   }
@@ -20,8 +20,8 @@ class TransporteScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(height: 65.0,),
-          Image(
+          const SizedBox(height: 65.0,),
+          const Image(
             image: AssetImage("images/566499.png"),
             width: 120.0,
             height: 120.0,

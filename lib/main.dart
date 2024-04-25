@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:codethon_project_dart/Transporte.dart';
 import 'package:codethon_project_dart/global/global_var.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'global_var.dart';
+
+
 
 //me cago en mi prima como no se cambie
 
@@ -25,7 +25,7 @@ void main() {
 class MyApp extends StatelessWidget {
 
   final DBService dbService;
-  MyApp({required this.dbService});
+  const MyApp({super.key, required this.dbService});
   // This widget is the root of your application.
 
   @override
@@ -80,10 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _currentIndex = 0;
   final List<Widget> _children = [
-    Screen1(),
+    const Screen1(),
     Screen2(),
-    Screen3(),
-    Screen4(),
+    const Screen3(),
+    const Screen4(),
   ];
 
   void onTabTapped(int index) {
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
         type: BottomNavigationBarType.fixed,
 
         //backgroundColor: Colors.indigo,
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Búsqueda',
@@ -131,17 +131,26 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Screen1 extends StatelessWidget {
+  const Screen1({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Pantalla 1'),
     );
   }
 }
 
+
+
+
 class Screen2 extends StatelessWidget {
+
+
   final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
   GoogleMapController? controllerGoogleMap;
+
+  Screen2({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,20 +191,59 @@ class Screen2 extends StatelessWidget {
   }
 }
 
-class Screen3 extends StatelessWidget {
+
+/*class Screen2 extends StatelessWidget {
+  final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
+  GoogleMapController? controllerGoogleMap;
+
+  // Asegúrate de inicializar googlePlexInitialPosition correctamente
+  final CameraPosition googlePlexInitialPosition = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    print("Iniciando el widget Screen2"); // Similar a console.log en JavaScript
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            initialCameraPosition: googlePlexInitialPosition,
+            onMapCreated: (GoogleMapController mapController) {
+              controllerGoogleMap = mapController;
+              googleMapCompleterController.complete(controllerGoogleMap);
+              print("Mapa creado y controlador asignado"); // Similar a console.log en JavaScript
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}*/
+
+
+class Screen3 extends StatelessWidget {
+  const Screen3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
       child: Text('Pantalla 3'),
     );
   }
 }
 
 class Screen4 extends StatelessWidget {
+  const Screen4({super.key});
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         middle: Text('Ajustes'),
       ),
       child: Center(
@@ -203,20 +251,20 @@ class Screen4 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Círculo con foto de perfil
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: CircleAvatar(
                 radius: 50,
                 backgroundImage: NetworkImage('https://example.com/path/to/profile/image.jpg'), // Reemplaza con la URL de tu imagen de perfil
               ),
             ),
             // Texto debajo del círculo
-            Text(
+            const Text(
               'Nombre de Usuario',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             // Cuadro con filas para las opciones centrado
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               width: 500,
               decoration: BoxDecoration(
@@ -229,15 +277,15 @@ class Screen4 extends StatelessWidget {
               ),// Ajusta el ancho según sea necesario
               child: ListView(
                 shrinkWrap: true,
-                padding: EdgeInsets.only(top: 0),
+                padding: const EdgeInsets.only(top: 0),
                 children: <Widget>[
                   CupertinoListTile(
-                    title: Text('General'),
+                    title: const Text('General'),
                     onTap: () {
                       // Agregar funcionalidad aquí
                     },
                   ),
-                  Divider(
+                  const Divider(
                     height: 1,
                     thickness: 1,
                     color: CupertinoColors.systemGrey4,
@@ -245,12 +293,12 @@ class Screen4 extends StatelessWidget {
                     endIndent: 16,
                   ),
                   CupertinoListTile(
-                    title: Text('Permisos'),
+                    title: const Text('Permisos'),
                     onTap: () {
                       // Agregar funcionalidad aquí
                     },
                   ),
-                  Divider(
+                  const Divider(
                     height: 1,
                     thickness: 1,
                     color: CupertinoColors.systemGrey4,
@@ -258,12 +306,12 @@ class Screen4 extends StatelessWidget {
                     endIndent: 16,
                   ),
                   CupertinoListTile(
-                    title: Text('Notificaciones'),
+                    title: const Text('Notificaciones'),
                     onTap: () {
                       // Agregar funcionalidad aquí
                     },
                   ),
-                  Divider(
+                  const Divider(
                     height: 1,
                     thickness: 1,
                     color: CupertinoColors.systemGrey4,
@@ -271,7 +319,7 @@ class Screen4 extends StatelessWidget {
                     endIndent: 16,
                   ),
                   CupertinoListTile(
-                    title: Text('Informacion Personal'),
+                    title: const Text('Informacion Personal'),
                     onTap: () {
                       // Agregar funcionalidad aquí
                     },
