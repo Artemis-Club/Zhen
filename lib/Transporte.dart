@@ -8,13 +8,14 @@ import 'package:weather/weather.dart';
 class TransporteScreen extends StatelessWidget {
   const TransporteScreen({super.key});
 
-  void weather(BuildContext context) async{
+  Future<String> weather() async{
     WeatherFactory wf = new WeatherFactory('1fc6a21d7c1a05d3aff1156d71ff425f', language: Language.SPANISH);
     Weather w = await wf.currentWeatherByCityName("Valencia");
-
+    return w.toString();
   }
   @override
   Widget build(BuildContext context) {
+    String tiem = weather().toString();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -26,7 +27,7 @@ class TransporteScreen extends StatelessWidget {
             height: 120.0,
             alignment:Alignment.center,
           ),
-
+          Text(tiem),
         ],
       ),
     );
