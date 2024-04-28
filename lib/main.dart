@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:codethon_project_dart/global/global_var.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -149,6 +152,24 @@ class Screen2 extends StatelessWidget {
 
   final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
   GoogleMapController? controllerGoogleMap;
+
+  void updateMapTheme(GoogleMapController controller){
+
+    getJsonFilesFromThemes("themes/day.json").then((value) => setGoogleMapStyle(value, controller));
+
+  }
+
+  Future<String> getJsonFilesFromThemes(String MapStylePath) async{
+    ByteData byteData = await rootBundle.load(MapStylePath);
+    var list = byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+    return utf8.decode(list);
+  }
+
+  setGoogleMapStyle(String googleMapStyle, GoogleMapController controller)
+  {
+    controller.setMapStyle(googleMapStyle);
+  }
+
 
   Screen2({super.key});
   @override
