@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:codethon_project_dart/global/global_var.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,9 +11,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 
-//me cago en mi prima como no se cambie
 
-void main() {
+
+
+/*void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   Supabase.initialize(
       url: 'https://ebrshztwmwageblbeono.supabase.co', // Reemplaza con tu URL de Supabase
@@ -23,7 +23,18 @@ void main() {
   final dbService = DBService(Supabase.instance.client);
 
   runApp(MyApp(dbService: dbService));
+
+  await Permission.locationWhenInUse.isDenied.then((valueOfPermission)
+      {
+        if(valueOfPermission)
+          {
+            Permission.locationWhenInUse.request();
+          }
+      });
+
+
 }
+
 
 class MyApp extends StatelessWidget {
 
@@ -79,12 +90,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
+  getCurrentLiveLocationOfUser() async
+  {
+    Position positionOfUser = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+    currentPositionOfUser = positionOfUser;
+    LatLng positionOfUserInLatLng = LatLng(currentPositionOfUser!.latitude, currentPositionOfUser!.longitude);
+  }
 
   int _currentIndex = 0;
   final List<Widget> _children = [
     const Screen1(),
-    Screen2(),
+    const Screen2(),
     const Screen3(),
     const Screen4(),
   ];
@@ -131,7 +147,98 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}*/
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Supabase.initialize(
+      url: 'https://ebrshztwmwageblbeono.supabase.co', // Reemplaza con tu URL de Supabase
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVicnNoenR3bXdhZ2VibGJlb25vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NDgyNjYsImV4cCI6MjAyNjUyNDI2Nn0.F3bg-b81AoWKLW4BjG2IooS6R6F2blx3p3nkrFrkXVk' // Reemplaza con tu clave anon de Supabase
+  );
+  final dbService = DBService(Supabase.instance.client);
+
+  // Solicitar permisos de ubicación
+  await Permission.location.request();
+
+  runApp(MyApp(dbService: dbService));
 }
+
+class MyApp extends StatelessWidget {
+  final DBService dbService;
+  const MyApp({super.key, required this.dbService});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    const Screen1(),
+    Screen2(),
+    const Screen3(),
+    const Screen4(),
+  ];
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped,
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Búsqueda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map_rounded),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Hoy',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Ajustes',
+          ),
+        ],
+        backgroundColor: Colors.indigo,
+        selectedItemColor: Colors.blueGrey,
+        unselectedItemColor: Colors.white,
+        currentIndex: _currentIndex,
+      ),
+    );
+  }
+}
+
 
 class Screen1 extends StatelessWidget {
   const Screen1({super.key});
@@ -147,104 +254,179 @@ class Screen1 extends StatelessWidget {
 
 
 
-class Screen2 extends StatelessWidget {
 
+class Screen2 extends StatefulWidget {
+  const Screen2({super.key});
 
-  final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
-  GoogleMapController? controllerGoogleMap;
-
-  void updateMapTheme(GoogleMapController controller){
-
-    getJsonFilesFromThemes("themes/day.json").then((value) => setGoogleMapStyle(value, controller));
-
-  }
-
-  Future<String> getJsonFilesFromThemes(String MapStylePath) async{
-    ByteData byteData = await rootBundle.load(MapStylePath);
-    var list = byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    return utf8.decode(list);
-  }
-
-  setGoogleMapStyle(String googleMapStyle, GoogleMapController controller)
-  {
-    controller.setMapStyle(googleMapStyle);
-  }
-
-
-  Screen2({super.key});
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-
-      /*child: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Ajusta el padding horizontal para controlar el ancho
-              child: CupertinoSearchTextField(
-                placeholder: 'Buscar',
-                onChanged: (value) {
-                  // Aquí puedes manejar los cambios en el texto de búsqueda
-                },
-                onSubmitted: (value) {
-                  // Aquí puedes manejar la acción de enviar el texto de búsqueda
-                },
-              ),
-            ),
-            Expanded(
-              child: Center(*/
-                body: Stack(
-                  children: [
-                    GoogleMap(
-                      mapType: MapType.normal,
-                      myLocationEnabled: true,
-                      initialCameraPosition: googlePlexInitialPosition,
-                      onMapCreated: (GoogleMapController mapController){
-                        controllerGoogleMap = mapController;
-                        googleMapCompleterController.complete(controllerGoogleMap);
-                      },
-
-                    ),
-                  ],
-              ),
-            );
-
-  }
+  _Screen2State createState() => _Screen2State();
 }
 
 
-/*class Screen2 extends StatelessWidget {
-  final Completer<GoogleMapController> googleMapCompleterController = Completer<GoogleMapController>();
-  GoogleMapController? controllerGoogleMap;
 
-  // Asegúrate de inicializar googlePlexInitialPosition correctamente
-  final CameraPosition googlePlexInitialPosition = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+/*class _Screen2State extends State<Screen2> {
+  final Completer<GoogleMapController> _controller = Completer();
+  LatLng _currentPosition = LatLng(0, 0); // Posición inicial por defecto
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMapStyle();
+    _getCurrentLocation(); // Obtener la ubicación actual del usuario
+  }
+
+  Future<void> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    print('Ubicación obtenida: ${position.latitude}, ${position.longitude}');
+    setState(() {
+      _currentPosition = LatLng(position.latitude, position.longitude);
+    });
+  }
+
+  Future<void> _loadMapStyle() async {
+    String mapStyle = await rootBundle.loadString('themes/day.json');
+    _controller.future.then((controller) {
+      controller.setMapStyle(mapStyle);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    print("Iniciando el widget Screen2"); // Similar a console.log en JavaScript
-
     return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            initialCameraPosition: googlePlexInitialPosition,
-            onMapCreated: (GoogleMapController mapController) {
-              controllerGoogleMap = mapController;
-              googleMapCompleterController.complete(controllerGoogleMap);
-              print("Mapa creado y controlador asignado"); // Similar a console.log en JavaScript
-            },
-          ),
-        ],
+      body: GoogleMap(
+        mapType: MapType.normal,
+        myLocationEnabled: true,
+        initialCameraPosition: CameraPosition(
+          target: _currentPosition, // Usar la ubicación actual del usuario
+          zoom: 14.4746,
+        ),
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
       ),
     );
   }
 }*/
+
+
+/*class _Screen2State extends State<Screen2> {
+  final Completer<GoogleMapController> _controller = Completer();
+  Future<LatLng> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    return LatLng(position.latitude, position.longitude);
+  }
+
+  Future<void> _loadMapStyle() async {
+    String mapStyle = await rootBundle.loadString('themes/day.json');
+    _controller.future.then((controller) {
+      controller.setMapStyle(mapStyle);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMapStyle();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<LatLng>(
+      future: _getCurrentLocation(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error al obtener la ubicación'));
+        } else {
+          return GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            initialCameraPosition: CameraPosition(
+              target: snapshot.data!,
+              zoom: 15.7746,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+*/
+
+
+class _Screen2State extends State<Screen2> {
+  final Completer<GoogleMapController> _controller = Completer();
+  Set<Marker> _markers = {}; // Conjunto para almacenar los marcadores
+
+  Future<LatLng> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    return LatLng(position.latitude, position.longitude);
+  }
+
+  Future<void> _loadMapStyle() async {
+    String mapStyle = await rootBundle.loadString('themes/day.json');
+    _controller.future.then((controller) {
+      controller.setMapStyle(mapStyle);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMapStyle();
+    _getCurrentLocation().then((position) {
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: MarkerId('userLocation'),
+            position: position,
+            infoWindow: InfoWindow(title: 'Tu Ubicación'),
+          ),
+        );
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<LatLng>(
+      future: _getCurrentLocation(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error al obtener la ubicación'));
+        } else {
+          return GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            markers: _markers, // Añade los marcadores al mapa
+            initialCameraPosition: CameraPosition(
+              target: snapshot.data!,
+              zoom: 15.7746,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+
+
+
+
 
 
 class Screen3 extends StatelessWidget {
@@ -355,4 +537,6 @@ class Screen4 extends StatelessWidget {
     );
   }
 }
+
+
 
