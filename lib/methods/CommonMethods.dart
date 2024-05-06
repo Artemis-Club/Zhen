@@ -8,7 +8,7 @@ class CommonMethods{
 
     if(connectionResult != ConnectivityResult.mobile && connectionResult != ConnectivityResult.wifi ){
       if(!context.mounted)return;
-      displaySnackBar("Compruebe que está conectado a Internet", context)
+      displaySnackBar("Compruebe que está conectado a Internet", context);
     }
   }
 
