@@ -14,10 +14,11 @@ import 'dart:html';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 
-import 'dart:io';
-
-
-
+import 'dart:io' as io;
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const Screen1(),
     Screen2(),
     const Screen3(),
-    //Screen4(),
+    Screen4(),
   ];
 
   void onTabTapped(int index) {
@@ -315,240 +316,6 @@ class _Screen2State extends State<Screen2> {
 
 
 
-
-
-/*class Screen4 extends StatefulWidget {
-  const Screen4({super.key});
-
-  @override
-  _Screen4State createState() => _Screen4State();
-}
-
-class _Screen4State extends State<Screen4> {
-  bool _isHovering = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Ajustes'),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Círculo con foto de perfil
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onEnter: (_) => setState(() => _isHovering = true),
-                onExit: (_) => setState(() => _isHovering = false),
-                child: GestureDetector(
-                  onTap: () async {
-                    FilePickerResult? result = await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['jpg', 'png', 'jpeg'],
-                    );
-
-                    if (result != null) {
-                      // Aquí puedes manejar la imagen seleccionada
-                      // Por ejemplo, actualizar el estado del widget con la nueva imagen
-                      // Nota: Este es un ejemplo básico, necesitarás implementar la lógica para actualizar la imagen
-                    }
-                  },
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: _isHovering ? Colors.purple.shade200 : Colors.purple,
-                    child: _isHovering
-                        ? Text(
-                      'Editar foto',
-                      style: TextStyle(color: Colors.white),
-                    )
-                        : null,
-                    backgroundImage: NetworkImage('https://example.com/path/to/profile/image.jpg'), // Reemplaza con la URL de tu imagen de perfil
-                  ),
-                ),
-              ),
-            ),
-            // Texto debajo del círculo
-            const Text(
-              'Nombre de Usuario',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            // Cuadro con filas para las opciones centrado
-            const SizedBox(height: 20),
-            Container(
-              width: 500,
-              decoration: BoxDecoration(
-                color: CupertinoColors.white, // Color de fondo del cuadro
-                borderRadius: BorderRadius.circular(10), // Radio del borde redondeado
-                border: Border.all(
-                  color: CupertinoColors.systemGrey4, // Color del contorno
-                  width: 1, // Ancho del contorno
-                ),
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(top: 0),
-                children: <Widget>[
-                  CupertinoListTile(
-                    title: const Text('General'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Permisos'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Notificaciones'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Información Personal'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  // Agrega más CupertinoListTile según sea necesario
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-*/
-/*class Screen4 extends StatelessWidget {
-  const Screen4({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Ajustes'),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Círculo con foto de perfil
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage('https://example.com/path/to/profile/image.jpg'), // Reemplaza con la URL de tu imagen de perfil
-              ),
-            ),
-            // Texto debajo del círculo
-            const Text(
-              'Nombre de Usuario',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            // Cuadro con filas para las opciones centrado
-            const SizedBox(height: 20),
-            Container(
-              width: 500,
-              decoration: BoxDecoration(
-                color: CupertinoColors.white, // Color de fondo del cuadro
-                borderRadius: BorderRadius.circular(10), // Radio del borde redondeado
-                border: Border.all(
-                  color: CupertinoColors.systemGrey4, // Color del contorno
-                  width: 1, // Ancho del contorno
-                ),
-              ),// Ajusta el ancho según sea necesario
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(top: 0),
-                children: <Widget>[
-                  CupertinoListTile(
-                    title: const Text('General'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Permisos'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Notificaciones'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Informacion Personal'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  // Agrega más CupertinoListTile según sea necesario
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
-//INTENTO DE SOLUCION MAS RECIENTE
-
 /*class Screen4 extends StatefulWidget {
   const Screen4({Key? key}) : super(key: key);
 
@@ -558,147 +325,60 @@ class _Screen4State extends State<Screen4> {
 
 class _Screen4State extends State<Screen4> {
   bool _isHovering = false;
-  File? _profileImage;
+  dynamic _profileImage;
+  String _username = 'Nombre de Usuario'; // Ejemplo de nombre de usuario
 
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Ajustes'),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Círculo con foto de perfil
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                onEnter: (_) => setState(() => _isHovering = true),
-                onExit: (_) => setState(() => _isHovering = false),
-                child: GestureDetector(
-                  onTap: () async {
-                    FilePickerResult? result = await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['jpg', 'png', 'jpeg'],
-                    );
-
-                    if (result != null) {
+  void _showUsernameDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Cambiar nombre de usuario'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Nuevo nombre de usuario',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Cancelar
+                    },
+                    child: Text('Cancelar'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Confirmar y actualizar el nombre de usuario
                       setState(() {
-                        _profileImage = File(result.files.single.path!);
+                        _username = 'Nuevo nombre de usuario'; // Actualizar el nombre de usuario
                       });
-                    }
-                  },
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.transparent, // Hace que el fondo sea transparente
-                    child: _isHovering
-                        ? Text(
-                      'Editar foto',
-                      style: TextStyle(color: Colors.white),
-                    )
-                        : null,
-                    backgroundImage:  AssetImage('images/UsuarioSinFoto.png'), // Asegúrate de tener esta imagen en tu carpeta de assets
-                    // Asegúrate de tener esta imagen en tu carpeta de assets
-                  ),
-                ),
-              ),
-            ),
-            // Texto debajo del círculo
-            const Text(
-              'Nombre de Usuario',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            // Cuadro con filas para las opciones centrado
-            const SizedBox(height: 20),
-            Container(
-              width: 500,
-              decoration: BoxDecoration(
-                color: CupertinoColors.white, // Color de fondo del cuadro
-                borderRadius: BorderRadius.circular(10), // Radio del borde redondeado
-                border: Border.all(
-                  color: CupertinoColors.systemGrey4, // Color del contorno
-                  width: 1, // Ancho del contorno
-                ),
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(top: 0),
-                children: <Widget>[
-                  CupertinoListTile(
-                    title: const Text('General'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
+                      Navigator.of(context).pop(); // Cerrar el diálogo
                     },
+                    child: Text('Confirmar'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                    ),
                   ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Permisos'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Notificaciones'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Información Personal'),
-                    onTap: () {
-                      // Agregar funcionalidad aquí
-                    },
-                  ),
-                  // Agrega más CupertinoListTile según sea necesario
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
-}
-
-*/
-
-
-
-
-
-
-class Screen4 extends StatefulWidget {
-  const Screen4({Key? key}) : super(key: key);
-
-  @override
-  _Screen4State createState() => _Screen4State();
-}
-
-class _Screen4State extends State<Screen4> {
-  bool _isHovering = false;
-  Image? _profileImage;
 
   @override
   Widget build(BuildContext context) {
@@ -719,23 +399,39 @@ class _Screen4State extends State<Screen4> {
                 child: GestureDetector(
                   onTap: () async {
                     FilePickerResult? result = await FilePicker.platform.pickFiles(
-                      type: FileType.image,
+                      type: FileType.custom,
                       allowedExtensions: ['jpg', 'png', 'jpeg'],
                     );
-                    if (result != null && result.files.single.path != null) {
-                      Uint8List? fileBytes = result.files.single.bytes;
-                      if (fileBytes != null) {
-                        setState(() {
-                          _profileImage = Image.memory(fileBytes);
-                        });
+                    if (result!= null) {
+                      if (kIsWeb) {
+                        Uint8List? fileBytes = result.files.single.bytes;
+                        if (fileBytes!= null) {
+                          setState(() {
+                            _profileImage = MemoryImage(fileBytes);
+                          });
+                        }
+                      } else {
+                        String? filePath = result.files.single.path;
+                        if (filePath!= null) {
+                          setState(() {
+                            _profileImage = FileImage(io.File(filePath));
+                          });
+                        }
                       }
                     }
                   },
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: _isHovering ? Colors.grey[700] : Colors.transparent,
-                    backgroundImage: _profileImage == null ? const AssetImage('images/UsuarioSinFoto.png') : null,
-                    child: _profileImage != null ? ClipOval(child: _profileImage!) : null,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _username,
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: _showUsernameDialog,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -774,7 +470,209 @@ class _Screen4State extends State<Screen4> {
                     title: const Text('Permisos'),
                     onTap: () {},
                   ),
-                  // Más opciones como en el código original
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: CupertinoColors.systemGrey4,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  CupertinoListTile(
+                    title: const Text('Notificaciones'),
+                    onTap: () {},
+                  ),
+                  // Agrega más CupertinoListTile según sea necesario
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+*/
+
+
+class Screen4 extends StatefulWidget {
+  const Screen4({Key? key}) : super(key: key);
+
+  @override
+  _Screen4State createState() => _Screen4State();
+}
+
+class _Screen4State extends State<Screen4> {
+  bool _isHovering = false;
+  dynamic _profileImage;
+  String _username = 'Nombre de Usuario'; // Ejemplo de nombre de usuario
+
+  void _showUsernameDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Editar nombre de usuario'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Nuevo nombre de usuario',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Cancelar
+                    },
+                    child: Text('Cancelar'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Confirmar y actualizar el nombre de usuario
+                      setState(() {
+                        _username = 'Nuevo nombre de usuario'; // Actualizar el nombre de usuario
+                      });
+                      Navigator.of(context).pop(); // Cerrar el diálogo
+                    },
+                    child: Text('Confirmar'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Ajustes'),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onEnter: (_) => setState(() => _isHovering = true),
+                onExit: (_) => setState(() => _isHovering = false),
+                child: GestureDetector(
+                  onTap: () async {
+                    FilePickerResult? result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['jpg', 'png', 'jpeg'],
+                    );
+                    if (result!= null) {
+                      if (kIsWeb) {
+                        Uint8List? fileBytes = result.files.single.bytes;
+                        if (fileBytes!= null) {
+                          setState(() {
+                            _profileImage = MemoryImage(fileBytes);
+                          });
+                        }
+                      } else {
+                        String? filePath = result.files.single.path;
+                        if (filePath!= null) {
+                          setState(() {
+                            _profileImage = FileImage(io.File(filePath));
+                          });
+                        }
+                      }
+                    }
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: CupertinoColors.systemGrey4,
+                              width: 1,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor: _isHovering? Colors.grey.shade500 : Colors.transparent,
+                            backgroundImage: _profileImage == null
+                                ? const AssetImage('images/UsuarioSinFoto.png')
+                                : _profileImage,
+                          ),
+                        ),
+                      ),
+                      if (_isHovering)
+                        Text(
+                          'Editar foto',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              width: 500,
+              decoration: BoxDecoration(
+                color: CupertinoColors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: CupertinoColors.systemGrey4,
+                  width: 1,
+                ),
+              ),
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(top: 0),
+                children: <Widget>[
+                  CupertinoListTile(
+                    title: const Text('General'),
+                    onTap: () {},
+                  ),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: CupertinoColors.systemGrey4,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  CupertinoListTile(
+                    title: const Text('Permisos'),
+                    onTap: () {},
+                  ),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: CupertinoColors.systemGrey4,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  CupertinoListTile(
+                    title: const Text('Notificaciones'),
+                    onTap: () {},
+                  ),
+                  // Agrega más CupertinoListTile según sea necesario
                 ],
               ),
             ),
