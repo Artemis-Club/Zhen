@@ -314,9 +314,10 @@ class _Screen2State extends State<Screen2> {
   }
 }
 
+/*
+//SALE TODO PERO EL SOMBREADO ES MAS GRANDE QUE EL CIRCLEAVATAR Y LA IMAGEN SE ELIGE DESDE EL NOMBRE
 
-
-/*class Screen4 extends StatefulWidget {
+class Screen4 extends StatefulWidget {
   const Screen4({Key? key}) : super(key: key);
 
   @override
@@ -333,7 +334,7 @@ class _Screen4State extends State<Screen4> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Cambiar nombre de usuario'),
+          title: Text('Editar nombre de Usuario'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -344,6 +345,10 @@ class _Screen4State extends State<Screen4> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                onChanged: (value) {
+                  // Captura el valor ingresado en el TextField
+                  _username = value; // Actualiza el nombre de usuario con el valor ingresado
+                },
               ),
               SizedBox(height: 10),
               Row(
@@ -362,7 +367,7 @@ class _Screen4State extends State<Screen4> {
                     onPressed: () {
                       // Confirmar y actualizar el nombre de usuario
                       setState(() {
-                        _username = 'Nuevo nombre de usuario'; // Actualizar el nombre de usuario
+                        _username = _username; // Asegúrate de que el nombre de usuario se actualice con el valor ingresado
                       });
                       Navigator.of(context).pop(); // Cerrar el diálogo
                     },
@@ -379,6 +384,7 @@ class _Screen4State extends State<Screen4> {
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -420,25 +426,75 @@ class _Screen4State extends State<Screen4> {
                       }
                     }
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _username,
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: _showUsernameDialog,
-                      ),
-                    ],
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        // Parte superior: Selección de foto de perfil
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            onEnter: (_) => setState(() => _isHovering = true),
+                            onExit: (_) => setState(() => _isHovering = false),
+                            child: GestureDetector(
+                              onTap: () async {
+                                // Lógica para seleccionar foto de perfil
+                              },
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: CupertinoColors.systemGrey4,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 50,
+                                        backgroundColor: _isHovering? Colors.grey.shade500 : Colors.transparent,
+                                        backgroundImage: _profileImage == null
+                                            ? const AssetImage('images/UsuarioSinFoto.png')
+                                            : _profileImage,
+                                      ),
+                                    ),
+                                  ),
+                                  if (_isHovering)
+                                    Text(
+                                      'Editar foto',
+                                      style: TextStyle(color: Colors.white, fontSize: 14),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Parte inferior: Icono del lápiz para editar nombre de usuario
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _username,
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: _showUsernameDialog,
+                              color: Colors.black, // Mantén el color normal
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+
+
                 ),
               ),
-            ),
-            const Text(
-              'Nombre de Usuario',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Container(
@@ -491,10 +547,8 @@ class _Screen4State extends State<Screen4> {
     );
   }
 }
-
 */
-
-
+//SE MUESTRA TODO SUPERPUESTO ME CAGO EN TODO
 class Screen4 extends StatefulWidget {
   const Screen4({Key? key}) : super(key: key);
 
@@ -512,7 +566,7 @@ class _Screen4State extends State<Screen4> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Editar nombre de usuario'),
+          title: Text('Editar nombre de Usuario'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -523,6 +577,10 @@ class _Screen4State extends State<Screen4> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                onChanged: (value) {
+                  // Captura el valor ingresado en el TextField
+                  _username = value; // Actualiza el nombre de usuario con el valor ingresado
+                },
               ),
               SizedBox(height: 10),
               Row(
@@ -541,7 +599,7 @@ class _Screen4State extends State<Screen4> {
                     onPressed: () {
                       // Confirmar y actualizar el nombre de usuario
                       setState(() {
-                        _username = 'Nuevo nombre de usuario'; // Actualizar el nombre de usuario
+                        _username = _username; // Asegúrate de que el nombre de usuario se actualice con el valor ingresado
                       });
                       Navigator.of(context).pop(); // Cerrar el diálogo
                     },
@@ -614,7 +672,9 @@ class _Screen4State extends State<Screen4> {
                           ),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundColor: _isHovering? Colors.grey.shade500 : Colors.transparent,
+                            backgroundColor: _isHovering
+                                ? Colors.grey.shade500
+                                : Colors.transparent,
                             backgroundImage: _profileImage == null
                                 ? const AssetImage('images/UsuarioSinFoto.png')
                                 : _profileImage,
@@ -626,6 +686,21 @@ class _Screen4State extends State<Screen4> {
                           'Editar foto',
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _username,
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: _showUsernameDialog,
+                            color: Colors.black, // Mantén el color normal
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
