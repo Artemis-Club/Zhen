@@ -84,6 +84,11 @@ flutter:
      - images/nublado.png
      - images/lloviendo.png
      - themes/
+     - images/Bicicletas.png
+     - images/Andando.png
+     - images/CocheElectrico.png
+     - images/TransportePublico.png
+     - images/Naranjitos.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

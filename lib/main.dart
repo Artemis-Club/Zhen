@@ -22,7 +22,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Supabase.initialize(
@@ -40,6 +39,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final DBService dbService;
   const MyApp({super.key, required this.dbService});
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +64,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   final List<Widget> _children = [
-    const Screen1(),
-    Screen2(),
     const Screen3(),
+    Screen2(),
     Screen4(),
   ];
 
@@ -86,25 +85,23 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: onTabTapped,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
+
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Búsqueda',
+            icon: Icon(Icons.add),
+            label: 'Hoy',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map_rounded),
             label: 'Inicio',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Hoy',
-          ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Ajustes',
           ),
         ],
-        backgroundColor: Colors.indigo,
-        selectedItemColor: Colors.blueGrey,
+        backgroundColor: Colors.indigoAccent,
+        selectedItemColor: Colors.grey,
         unselectedItemColor: Colors.white,
         currentIndex: _currentIndex,
       ),
@@ -112,17 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
-class Screen1 extends StatelessWidget {
-  const Screen1({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Pantalla 1'),
-    );
-  }
-}
 
 
 
@@ -212,10 +198,257 @@ class _Screen2State extends State<Screen2> {
 }
 */
 
+// TODO EL FRONT BIEN HECHO
+/*class Screen3 extends StatelessWidget {
+  const Screen3({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Nueva Actividad'),
+        backgroundColor: Color(0xFFF5F5DC), // Color beige crema para la barra de navegación
+      ),
+      backgroundColor: Color(0xFFF5F5DC), // Color beige crema para el fondo de la pantalla
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 30), // Espacio para el clima en el futuro
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  children: List.generate(4, (index) => _buildActivityCard(index, context)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivityCard(int index, BuildContext context) {
+    // Lista de títulos para los cuadrados
+    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
+    // Lista de nombres de archivo de imágenes para cada cuadro
+    List<String> imageNames = [
+      'images/Bicicletas.png',
+      'images/TransportePublico.png',
+      'images/CocheElectrico.png',
+      'images/Andando.png'
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white, // Color de fondo del cuadro
+        borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
+        border: Border.all(color: Colors.grey, width: 1), // Borde negro fino
+        image: DecorationImage(
+          image: AssetImage(imageNames[index]), // Imagen de fondo
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Color(0xFFF5F5DC), // Color beige crema para el fondo del texto
+              borderRadius: BorderRadius.circular(10), // Esquinas redondeadas para el fondo del texto
+            ),
+            child: Text(
+              titles[index],
+              style: const TextStyle(
+                color: Colors.black, // Cambiando a color negro para mejor contraste
+                fontWeight: FontWeight.bold, // Negrita
+                fontSize: 16, // Tamaño de texto
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+*/
+//TODO LO DE GLOBALKEY BIEN HECHO SIN FRONT
+/*class Screen3 extends StatelessWidget {
+  const Screen3({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _Screen4State screen4 = screen4StateKey.currentState!;
+
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Nueva Actividad'),
+        backgroundColor: Color(0xFFF5F5DC),
+      ),
+      backgroundColor: Color(0xFFF5F5DC),
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFF5F5DC),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: screen4.profileImage ?? AssetImage('images/UsuarioSinFoto.png'),
+                      radius: 30,
+                    ),
+                    Text(
+                      screen4.username,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    // Aquí se podrían añadir más widgets, como el número de puntos y el logo de naranja
+                  ],
+                ),
+              ),
+            ),
+            // Otros widgets...
+          ],
+        ),
+      ),
+    );
+  }
+}
+*/
+
+class Screen3 extends StatelessWidget {
+  const Screen3({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _Screen4State screen4 = screen4StateKey.currentState!;
+
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Nueva Actividad'),
+        backgroundColor: Color(0xFFF5F5DC),
+      ),
+      backgroundColor: Color(0xFFF5F5DC),
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.indigoAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: screen4.profileImage ?? AssetImage('images/UsuarioSinFoto.png'),
+                            radius: 25,  // Smaller radius for more padding around the avatar
+                          ),
+                          Text(
+                            screen4.username,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                          ),
+                          // Optional: Additional icons or information could be added here
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),  // Margin between the two containers
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.indigoAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      // This container is currently empty, additional widgets can be added later
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  children: List.generate(4, (index) => _buildActivityCard(index, context)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivityCard(int index, BuildContext context) {
+    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
+    List<String> imageNames = [
+      'images/Bicicletas.png',
+      'images/TransportePublico.png',
+      'images/CocheElectrico.png',
+      'images/Andando.png'
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey, width: 1),
+        image: DecorationImage(
+          image: AssetImage(imageNames[index]),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Color(0xFFF5F5DC),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              titles[index],
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 //LOCALIZADOR DE MOVIMIENTO
-
-
-
 
 class Screen2 extends StatefulWidget {
   @override
@@ -301,23 +534,7 @@ class _Screen2State extends State<Screen2> {
 }
 
 
-
-
-  class Screen3 extends StatelessWidget {
-  const Screen3({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Pantalla 3'),
-    );
-  }
-}
-
-/*
-//SALE TODO PERO EL SOMBREADO ES MAS GRANDE QUE EL CIRCLEAVATAR Y LA IMAGEN SE ELIGE DESDE EL NOMBRE
-
-class Screen4 extends StatefulWidget {
+/*class Screen4 extends StatefulWidget {
   const Screen4({Key? key}) : super(key: key);
 
   @override
@@ -328,6 +545,7 @@ class _Screen4State extends State<Screen4> {
   bool _isHovering = false;
   dynamic _profileImage;
   String _username = 'Nombre de Usuario'; // Ejemplo de nombre de usuario
+  int _hoveringIndex = -1; // Para manejar el efecto de sombra en las opciones de lista
 
   void _showUsernameDialog() {
     showDialog(
@@ -346,8 +564,7 @@ class _Screen4State extends State<Screen4> {
                   ),
                 ),
                 onChanged: (value) {
-                  // Captura el valor ingresado en el TextField
-                  _username = value; // Actualiza el nombre de usuario con el valor ingresado
+                  _username = value;
                 },
               ),
               SizedBox(height: 10),
@@ -360,12 +577,11 @@ class _Screen4State extends State<Screen4> {
                     },
                     child: Text('Cancelar'),
                     style: TextButton.styleFrom(
-                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                      foregroundColor: _isHovering ? Colors.grey[500] : Colors.black,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Confirmar y actualizar el nombre de usuario
                       setState(() {
                         _username = _username; // Asegúrate de que el nombre de usuario se actualice con el valor ingresado
                       });
@@ -373,7 +589,7 @@ class _Screen4State extends State<Screen4> {
                     },
                     child: Text('Confirmar'),
                     style: TextButton.styleFrom(
-                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                      foregroundColor: _isHovering ? Colors.grey[500] : Colors.black,
                     ),
                   ),
                 ],
@@ -384,7 +600,6 @@ class _Screen4State extends State<Screen4> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -408,17 +623,17 @@ class _Screen4State extends State<Screen4> {
                       type: FileType.custom,
                       allowedExtensions: ['jpg', 'png', 'jpeg'],
                     );
-                    if (result!= null) {
+                    if (result != null) {
                       if (kIsWeb) {
                         Uint8List? fileBytes = result.files.single.bytes;
-                        if (fileBytes!= null) {
+                        if (fileBytes != null) {
                           setState(() {
                             _profileImage = MemoryImage(fileBytes);
                           });
                         }
                       } else {
                         String? filePath = result.files.single.path;
-                        if (filePath!= null) {
+                        if (filePath != null) {
                           setState(() {
                             _profileImage = FileImage(io.File(filePath));
                           });
@@ -426,131 +641,145 @@ class _Screen4State extends State<Screen4> {
                       }
                     }
                   },
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        // Parte superior: Selección de foto de perfil
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            onEnter: (_) => setState(() => _isHovering = true),
-                            onExit: (_) => setState(() => _isHovering = false),
-                            child: GestureDetector(
-                              onTap: () async {
-                                // Lógica para seleccionar foto de perfil
-                              },
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(25),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: CupertinoColors.systemGrey4,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 50,
-                                        backgroundColor: _isHovering? Colors.grey.shade500 : Colors.transparent,
-                                        backgroundImage: _profileImage == null
-                                            ? const AssetImage('images/UsuarioSinFoto.png')
-                                            : _profileImage,
-                                      ),
-                                    ),
-                                  ),
-                                  if (_isHovering)
-                                    Text(
-                                      'Editar foto',
-                                      style: TextStyle(color: Colors.white, fontSize: 14),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Parte inferior: Icono del lápiz para editar nombre de usuario
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _username,
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: _showUsernameDialog,
-                              color: Colors.black, // Mantén el color normal
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-
+                  child: buildProfilePicture(),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            Container(
-              width: 500,
-              decoration: BoxDecoration(
-                color: CupertinoColors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: CupertinoColors.systemGrey4,
-                  width: 1,
+            buildOptionList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildProfilePicture() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: (_) => setState(() => _isHovering = true),
+              onExit: (_) => setState(() => _isHovering = false),
+              child: GestureDetector(
+                onTap: () async {
+                  // Lógica para seleccionar foto de perfil
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: CupertinoColors.systemGrey4,
+                            width: 1,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: _isHovering ? Colors.grey.shade500 : Colors.transparent,
+                          backgroundImage: _profileImage == null
+                              ? const AssetImage('images/UsuarioSinFoto.png')
+                              : _profileImage,
+                        ),
+                      ),
+                    ),
+                    if (_isHovering)
+                      Text(
+                        'Editar foto',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                  ],
                 ),
               ),
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(top: 0),
-                children: <Widget>[
-                  CupertinoListTile(
-                    title: const Text('General'),
-                    onTap: () {},
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Permisos'),
-                    onTap: () {},
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Notificaciones'),
-                    onTap: () {},
-                  ),
-                  // Agrega más CupertinoListTile según sea necesario
-                ],
-              ),
             ),
-          ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _username,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: _showUsernameDialog,
+                color: Colors.black, // Mantén el color normal
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildOptionList() {
+    return Container(
+      width: 500,
+      decoration: BoxDecoration(
+        color: CupertinoColors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: CupertinoColors.systemGrey4,
+          width: 1,
+        ),
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.only(top: 0),
+        children: <Widget>[
+          buildOptionItem(0, 'General'),
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: CupertinoColors.systemGrey4,
+            indent: 16,
+            endIndent: 16,
+          ),
+          buildOptionItem(1, 'Permisos'),
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: CupertinoColors.systemGrey4,
+            indent: 16,
+            endIndent: 16,
+          ),
+          buildOptionItem(2, 'Notificaciones'),
+          // Agrega más CupertinoListTile según sea necesario
+        ],
+      ),
+    );
+  }
+
+  Widget buildOptionItem(int index, String title) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hoveringIndex = index),
+      onExit: (_) => setState(() => _hoveringIndex = -1),
+      child: Container(
+        color: _hoveringIndex == index ? Colors.grey[300] : CupertinoColors.white,
+        child: CupertinoListTile(
+          title: Text(title),
+          onTap: () {},
         ),
       ),
     );
   }
 }
 */
-//SE MUESTRA TODO SUPERPUESTO ME CAGO EN TODO
+
+
+// Define un GlobalKey para el estado de Screen4.
+GlobalKey<_Screen4State> screen4StateKey = GlobalKey<_Screen4State>();
+
 class Screen4 extends StatefulWidget {
-  const Screen4({Key? key}) : super(key: key);
+  Screen4({Key? key}) : super(key: screen4StateKey);
 
   @override
   _Screen4State createState() => _Screen4State();
@@ -560,7 +789,9 @@ class _Screen4State extends State<Screen4> {
   bool _isHovering = false;
   dynamic _profileImage;
   String _username = 'Nombre de Usuario'; // Ejemplo de nombre de usuario
-
+  int _hoveringIndex = -1; // Para manejar el efecto de sombra en las opciones de lista
+  String get username => _username;
+  dynamic get profileImage => _profileImage;
   void _showUsernameDialog() {
     showDialog(
       context: context,
@@ -578,8 +809,7 @@ class _Screen4State extends State<Screen4> {
                   ),
                 ),
                 onChanged: (value) {
-                  // Captura el valor ingresado en el TextField
-                  _username = value; // Actualiza el nombre de usuario con el valor ingresado
+                  _username = value;
                 },
               ),
               SizedBox(height: 10),
@@ -592,12 +822,11 @@ class _Screen4State extends State<Screen4> {
                     },
                     child: Text('Cancelar'),
                     style: TextButton.styleFrom(
-                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                      foregroundColor: _isHovering ? Colors.grey[500] : Colors.black,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Confirmar y actualizar el nombre de usuario
                       setState(() {
                         _username = _username; // Asegúrate de que el nombre de usuario se actualice con el valor ingresado
                       });
@@ -605,7 +834,7 @@ class _Screen4State extends State<Screen4> {
                     },
                     child: Text('Confirmar'),
                     style: TextButton.styleFrom(
-                      foregroundColor: _isHovering? Colors.grey[500] : Colors.black,
+                      foregroundColor: _isHovering ? Colors.grey[500] : Colors.black,
                     ),
                   ),
                 ],
@@ -639,17 +868,17 @@ class _Screen4State extends State<Screen4> {
                       type: FileType.custom,
                       allowedExtensions: ['jpg', 'png', 'jpeg'],
                     );
-                    if (result!= null) {
+                    if (result != null) {
                       if (kIsWeb) {
                         Uint8List? fileBytes = result.files.single.bytes;
-                        if (fileBytes!= null) {
+                        if (fileBytes != null) {
                           setState(() {
                             _profileImage = MemoryImage(fileBytes);
                           });
                         }
                       } else {
                         String? filePath = result.files.single.path;
-                        if (filePath!= null) {
+                        if (filePath != null) {
                           setState(() {
                             _profileImage = FileImage(io.File(filePath));
                           });
@@ -657,103 +886,135 @@ class _Screen4State extends State<Screen4> {
                       }
                     }
                   },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: CupertinoColors.systemGrey4,
-                              width: 1,
-                            ),
-                          ),
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundColor: _isHovering
-                                ? Colors.grey.shade500
-                                : Colors.transparent,
-                            backgroundImage: _profileImage == null
-                                ? const AssetImage('images/UsuarioSinFoto.png')
-                                : _profileImage,
-                          ),
-                        ),
-                      ),
-                      if (_isHovering)
-                        Text(
-                          'Editar foto',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _username,
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: _showUsernameDialog,
-                            color: Colors.black, // Mantén el color normal
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: buildProfilePicture(),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            Container(
-              width: 500,
-              decoration: BoxDecoration(
-                color: CupertinoColors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: CupertinoColors.systemGrey4,
-                  width: 1,
-                ),
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(top: 0),
-                children: <Widget>[
-                  CupertinoListTile(
-                    title: const Text('General'),
-                    onTap: () {},
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Permisos'),
-                    onTap: () {},
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: CupertinoColors.systemGrey4,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  CupertinoListTile(
-                    title: const Text('Notificaciones'),
-                    onTap: () {},
-                  ),
-                  // Agrega más CupertinoListTile según sea necesario
-                ],
-              ),
-            ),
+            buildOptionList(),
           ],
         ),
       ),
     );
   }
+
+  Widget buildProfilePicture() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: (_) => setState(() => _isHovering = true),
+              onExit: (_) => setState(() => _isHovering = false),
+              child: GestureDetector(
+                onTap: () async {
+                  // Lógica para seleccionar foto de perfil
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: CupertinoColors.systemGrey4,
+                            width: 1,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: _isHovering ? Colors.grey.shade500 : Colors.transparent,
+                          backgroundImage: _profileImage == null
+                              ? const AssetImage('images/UsuarioSinFoto.png')
+                              : _profileImage,
+                        ),
+                      ),
+                    ),
+                    if (_isHovering)
+                      Text(
+                        'Editar foto',
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _username,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: _showUsernameDialog,
+                color: Colors.black, // Mantén el color normal
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildOptionList() {
+    return Container(
+      width: 500,
+      decoration: BoxDecoration(
+        color: CupertinoColors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: CupertinoColors.systemGrey4,
+          width: 1,
+        ),
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.only(top: 0),
+        children: <Widget>[
+          buildOptionItem(0, 'General'),
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: CupertinoColors.systemGrey4,
+            indent: 16,
+            endIndent: 16,
+          ),
+          buildOptionItem(1, 'Permisos'),
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: CupertinoColors.systemGrey4,
+            indent: 16,
+            endIndent: 16,
+          ),
+          buildOptionItem(2, 'Notificaciones'),
+          // Agrega más CupertinoListTile según sea necesario
+        ],
+      ),
+    );
+  }
+
+  Widget buildOptionItem(int index, String title) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hoveringIndex = index),
+      onExit: (_) => setState(() => _hoveringIndex = -1),
+      child: Container(
+        color: _hoveringIndex == index ? Colors.grey[300] : CupertinoColors.white,
+        child: CupertinoListTile(
+          title: Text(title),
+          onTap: () {},
+        ),
+      ),
+    );
+  }
 }
+
