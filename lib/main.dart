@@ -13,13 +13,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:html';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
-
 import 'dart:io' as io;
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
+import 'pointsManager.dart';
+import 'activity_details_dialog.dart';
+import 'ActivityInProgress.dart';
 
 
 void main() async {
@@ -198,141 +196,16 @@ class _Screen2State extends State<Screen2> {
 }
 */
 
-// TODO EL FRONT BIEN HECHO
-/*class Screen3 extends StatelessWidget {
-  const Screen3({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Nueva Actividad'),
-        backgroundColor: Color(0xFFF5F5DC), // Color beige crema para la barra de navegación
-      ),
-      backgroundColor: Color(0xFFF5F5DC), // Color beige crema para el fondo de la pantalla
-      child: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 30), // Espacio para el clima en el futuro
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  children: List.generate(4, (index) => _buildActivityCard(index, context)),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildActivityCard(int index, BuildContext context) {
-    // Lista de títulos para los cuadrados
-    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
-    // Lista de nombres de archivo de imágenes para cada cuadro
-    List<String> imageNames = [
-      'images/Bicicletas.png',
-      'images/TransportePublico.png',
-      'images/CocheElectrico.png',
-      'images/Andando.png'
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white, // Color de fondo del cuadro
-        borderRadius: BorderRadius.circular(20), // Esquinas redondeadas
-        border: Border.all(color: Colors.grey, width: 1), // Borde negro fino
-        image: DecorationImage(
-          image: AssetImage(imageNames[index]), // Imagen de fondo
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Color(0xFFF5F5DC), // Color beige crema para el fondo del texto
-              borderRadius: BorderRadius.circular(10), // Esquinas redondeadas para el fondo del texto
-            ),
-            child: Text(
-              titles[index],
-              style: const TextStyle(
-                color: Colors.black, // Cambiando a color negro para mejor contraste
-                fontWeight: FontWeight.bold, // Negrita
-                fontSize: 16, // Tamaño de texto
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-*/
-//TODO LO DE GLOBALKEY BIEN HECHO SIN FRONT
+//TODO BASTANTE BIEN SIN ERRORES
 /*class Screen3 extends StatelessWidget {
   const Screen3({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final _Screen4State screen4 = screen4StateKey.currentState!;
-
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Nueva Actividad'),
-        backgroundColor: Color(0xFFF5F5DC),
-      ),
-      backgroundColor: Color(0xFFF5F5DC),
-      child: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF5F5DC),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: screen4.profileImage ?? AssetImage('images/UsuarioSinFoto.png'),
-                      radius: 30,
-                    ),
-                    Text(
-                      screen4.username,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    // Aquí se podrían añadir más widgets, como el número de puntos y el logo de naranja
-                  ],
-                ),
-              ),
-            ),
-            // Otros widgets...
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
-
-class Screen3 extends StatelessWidget {
-  const Screen3({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final _Screen4State screen4 = screen4StateKey.currentState!;
+    final pointsManager = PointsManager();  // Asumiendo que tienes una instancia correcta
 
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
@@ -350,7 +223,7 @@ class Screen3 extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      height: 100,
                       decoration: BoxDecoration(
                         color: Colors.indigoAccent,
                         borderRadius: BorderRadius.circular(20),
@@ -360,26 +233,37 @@ class Screen3 extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             backgroundImage: screen4.profileImage ?? AssetImage('images/UsuarioSinFoto.png'),
-                            radius: 25,  // Smaller radius for more padding around the avatar
+                            radius: 25,
                           ),
                           Text(
                             screen4.username,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                           ),
-                          // Optional: Additional icons or information could be added here
+                          Row(
+                            children: [
+                              Text(
+                                '${pointsManager.points} ',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                              ),
+                              Image.asset(
+                                'images/Naranjitos.png',
+                                width: 24,
+                                height: 24,
+                              )
+                            ],
+                          )
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(width: 20),  // Margin between the two containers
+                  SizedBox(width: 20),
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      height: 100,
                       decoration: BoxDecoration(
                         color: Colors.indigoAccent,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      // This container is currently empty, additional widgets can be added later
                     ),
                   ),
                 ],
@@ -405,39 +289,239 @@ class Screen3 extends StatelessWidget {
 
   Widget _buildActivityCard(int index, BuildContext context) {
     List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
+    List<String> activityNames = ["Montar en bicicleta", "Usar transporte público", "Usar coche eléctrico", "Salir a andar"];
     List<String> imageNames = [
       'images/Bicicletas.png',
       'images/TransportePublico.png',
       'images/CocheElectrico.png',
       'images/Andando.png'
     ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey, width: 1),
-        image: DecorationImage(
-          image: AssetImage(imageNames[index]),
-          fit: BoxFit.cover,
+    PointsManager pointsManager = PointsManager();
+    return GestureDetector(
+      onTap: () => ActivityDetailsDialog.show(
+          context,
+          titles[index],
+          activityNames[index],  // Asegura que el nombre de la actividad es correcto
+          pointsManager.getPointsForActivity(activityNames[index]),  // Obtiene puntos para la actividad
+          pointsManager.getUnitForActivity(activityNames[index])
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey, width: 1),
+          image: DecorationImage(
+            image: AssetImage(imageNames[index]),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F5DC),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                titles[index],
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Color(0xFFF5F5DC),
-              borderRadius: BorderRadius.circular(10),
+    );
+  }
+
+  int getPointsPerUnit(String activityName) {
+    // Aquí iría la lógica para determinar los puntos por unidad según la actividad
+    return 10;  // Valor de ejemplo
+  }
+
+  String getUnit(String activityName) {
+    // Aquí iría la lógica para determinar la unidad (minutos, kilómetros, etc.) según la actividad
+    return "minuto";  // Valor de ejemplo
+  }
+
+}
+*/
+
+
+
+class Screen3 extends StatefulWidget {
+  const Screen3({Key? key}) : super(key: key);
+
+  @override
+  _Screen3State createState() => _Screen3State();
+}
+
+class _Screen3State extends State<Screen3> {
+  bool _isActivityInProgress = false;
+  String _currentActivityName = '';
+  bool _isKilometers = false;
+
+  void startActivity(String activityName, bool isKilometers) {
+    setState(() {
+      _isActivityInProgress = true;
+      _currentActivityName = activityName;
+      _isKilometers = isKilometers;
+    });
+  }
+
+  void stopActivity() {
+    setState(() {
+      _isActivityInProgress = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _Screen4State screen4 = screen4StateKey.currentState!;
+    final pointsManager = PointsManager();  // Asumiendo que tienes una instancia correcta
+
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Nueva Actividad'),
+        backgroundColor: Color(0xFFF5F5DC),
+      ),
+      backgroundColor: Color(0xFFF5F5DC),
+
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 30),
+            // Otros componentes aquí...
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.indigoAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: screen4.profileImage ?? AssetImage('images/UsuarioSinFoto.png'),
+                            radius: 25,
+                          ),
+                          Text(
+                            screen4.username,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                '${pointsManager.points} ',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                              ),
+                              Image.asset(
+                                'images/Naranjitos.png',
+                                width: 24,
+                                height: 24,
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.indigoAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: Text(
-              titles[index],
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+            SizedBox(height: 16),
+            if (_isActivityInProgress)
+              ActivityInProgress(
+                activityName: _currentActivityName,
+                isKilometers: _isKilometers,
+              ),
+            SizedBox(height: 16),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  children: List.generate(4, (index) => _buildActivityCard(index, context)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivityCard(int index, BuildContext context) {
+    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
+    List<String> activityNames = ["Montar en bicicleta", "Usar transporte público", "Usar coche eléctrico", "Salir a andar"];
+    List<String> imageNames = [
+      'images/Bicicletas.png',
+      'images/TransportePublico.png',
+      'images/CocheElectrico.png',
+      'images/Andando.png'
+    ];
+    PointsManager pointsManager = PointsManager();
+
+    return GestureDetector(
+      onTap: () => ActivityDetailsDialog.show(
+          context,
+          titles[index],  // El título de la actividad
+          activityNames[index],  // El nombre de la actividad
+          pointsManager.getPointsForActivity(activityNames[index]),  // Los puntos por unidad para la actividad
+          pointsManager.getUnitForActivity(activityNames[index]),  // La unidad para la actividad (minutos o kilómetros)
+              () => startActivity(activityNames[index], pointsManager.getUnitForActivity(activityNames[index]) == "kilómetro"),  // onStart callback
+              () => stopActivity()  // onStop callback
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey, width: 1),
+          image: DecorationImage(
+            image: AssetImage(imageNames[index]),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F5DC),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                titles[index],
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
@@ -446,7 +530,6 @@ class Screen3 extends StatelessWidget {
     );
   }
 }
-
 
 //LOCALIZADOR DE MOVIMIENTO
 
