@@ -381,9 +381,22 @@ class _Screen3State extends State<Screen3> {
     });
   }
 
+  void resetActivity() {
+    setState(() {
+      _isActivityInProgress = false;
+      _currentActivityName = '';
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final _Screen4State screen4 = screen4StateKey.currentState!;
+    final screen4 = screen4StateKey.currentState;
+    if (screen4 == null) {
+      // Si screen4 es null, muestra un indicador de carga o un widget alternativo
+      return Center(child: CircularProgressIndicator());
+    }
+
     final pointsManager = PointsManager();  // Asumiendo que tienes una instancia correcta
 
     return CupertinoPageScaffold(
@@ -455,7 +468,10 @@ class _Screen3State extends State<Screen3> {
               ActivityInProgress(
                 activityName: _currentActivityName,
                 isKilometers: _isKilometers,
+                onStop: stopActivity,
+                onReset: resetActivity,
               ),
+
             SizedBox(height: 16),
             Expanded(
               child: Padding(
@@ -493,7 +509,7 @@ class _Screen3State extends State<Screen3> {
           pointsManager.getPointsForActivity(activityNames[index]),  // Los puntos por unidad para la actividad
           pointsManager.getUnitForActivity(activityNames[index]),  // La unidad para la actividad (minutos o kilómetros)
               () => startActivity(activityNames[index], pointsManager.getUnitForActivity(activityNames[index]) == "kilómetro"),  // onStart callback
-              () => stopActivity()  // onStop callback
+              stopActivity  // () => stopActivity()
       ),
       child: Container(
         decoration: BoxDecoration(

@@ -25,22 +25,21 @@ class _ActivityTimerState extends State<ActivityTimer> {
   }
 
   void stopTimer() {
-    if (_timer != null && _timer!.isActive) {
+    if (_timer!= null && _timer!.isActive) {
       _timer!.cancel();
-      widget.onStop();
+      widget.onStop?.call(); // Usar el operador?. para evitar errores si onStop es null
     }
   }
 
   void resetTimer() {
-    if (_timer != null && _timer!.isActive) {
+    if (_timer!= null && _timer!.isActive) {
       _timer!.cancel();
-      widget.onReset();
+      widget.onReset?.call(); // Usar el operador?. para evitar errores si onReset es null
     }
     setState(() {
       _duration = Duration();
     });
   }
-
   @override
   void initState() {
     super.initState();

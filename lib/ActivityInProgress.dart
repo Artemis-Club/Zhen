@@ -49,12 +49,18 @@ import 'ActivityTimer.dart';
 */
 
 
-
 class ActivityInProgress extends StatelessWidget {
   final String activityName;
   final bool isKilometers;
+  final Function onStop;
+  final Function onReset;
 
-  ActivityInProgress({required this.activityName, this.isKilometers = false});
+  ActivityInProgress({
+    required this.activityName,
+    this.isKilometers = false,
+    required this.onStop,
+    required this.onReset,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,25 +75,18 @@ class ActivityInProgress extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(activityName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ActivityTimer(
-              isKilometers: isKilometers,
-              onStop: () {}, // Define la lógica específica al parar
-              onReset: () {}, // Define la lógica específica al resetear
-            ),
+            Text(activityName,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            Spacer(),
             IconButton(
               icon: Icon(CupertinoIcons.check_mark_circled_solid),
               color: Colors.green,
-              onPressed: () {
-                // Aquí podrías necesitar acceso al estado de ActivityTimer para parar el timer
-              },
+              onPressed: () => onStop(),
             ),
             IconButton(
               icon: Icon(CupertinoIcons.xmark_circle_fill),
               color: Colors.red,
-              onPressed: () {
-                // Aquí podrías necesitar acceso al estado de ActivityTimer para resetear el timer
-              },
+              onPressed: () => onReset(),
             ),
           ],
         ),
