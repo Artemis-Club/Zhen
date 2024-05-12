@@ -368,11 +368,13 @@ class _Screen3State extends State<Screen3> {
   bool _isKilometers = false;
 
   void startActivity(String activityName, bool isKilometers) {
-    setState(() {
-      _isActivityInProgress = true;
-      _currentActivityName = activityName;
-      _isKilometers = isKilometers;
-    });
+    if (!_isActivityInProgress) { // Asegura que no se reinicie si ya está en progreso
+      setState(() {
+        _isActivityInProgress = true;
+        _currentActivityName = activityName;
+        _isKilometers = isKilometers;
+      });
+    }
   }
 
   void stopActivity() {
