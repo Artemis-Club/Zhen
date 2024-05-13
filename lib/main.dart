@@ -15,6 +15,8 @@ import 'pointsManager.dart';
 import 'activity_details_dialog.dart';
 import 'ActivityInProgress.dart';
 import 'ActivityTimer.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 
 void main() async {
@@ -34,6 +36,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   final DBService dbService;
   const MyApp({super.key, required this.dbService});
+
+  
 
 
   @override
@@ -633,6 +637,21 @@ class _Screen3State extends State<Screen3> {
     }
   }
 
+  Future<String> weather() async {
+    final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Valencia,es&appid=1fc6a21d7c1a05d3aff1156d71ff425f&units=metric&lang=en'));
+
+    if (response.statusCode == 200) {
+      // Si la petición fue exitosa, parseamos el JSON.
+      var data = jsonDecode(response.body);
+      String weatherDescription = data['weather'][0]['description'];
+      double temperature = data['main']['temp'];
+      return weatherDescription;
+    } else {
+      // Si la petición falló, lanzamos un error.
+      throw Exception('Failed to load weather data');
+    }
+  }
+
   void stopActivity() {
     setState(() {
       _isActivityInProgress = false;
@@ -711,13 +730,94 @@ class _Screen3State extends State<Screen3> {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.indigoAccent,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
+                      child: FutureBuilder<String?>(
+                      future: weather(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          // Usa el operador?? para proporcionar un valor predeterminado en caso de que snapshot.data sea nulo.
+                          if(snapshot.data == "few clouds" || snapshot.data == "scattered clouds" || snapshot.data == "broken clouds"){
+                            return  Column(
+                              children: [
+                                Image.asset(
+                                  "images/nublado.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                Text("nublado")
+
+                              ],
+                            );
+                          }
+                          else if(snapshot.data == "shower rain" || snapshot.data == "rain"){
+                            return Column(
+                              children: [
+                                Image.asset(
+                                  "images/lloviendo.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                Text("lluvia")
+                              ],
+                            );
+                          }
+                          else if(snapshot.data == "mist"){
+                            return  Column(
+                              children: [
+                                Image.asset(
+                                  "images/niebla.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                Text("niebla")
+                              ],
+                            );
+                          }
+                          else if(snapshot.data == "snow"){
+                            return  Column(
+                              children: [
+                                Image.asset(
+                                  "images/nievee.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                Text("nevando")
+                              ],
+                            );
+                          }
+                          else if(snapshot.data == "thunderstorm"){
+                            return  Column(
+                              children: [
+                                Image.asset(
+                                  "images/tormenta.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                Text("tormenta")
+                              ],
+                            );
+                          }
+                          else if(snapshot.data == "clear sky"){
+                            return  Column(
+                              children: [
+                                Image.asset(
+                                  "images/soleado.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                Text("cielo despejado")
+                              ],
+                            );
+                          }
+                          return Text(snapshot.data?? 'Cargando...');
+                        } else if (snapshot.hasError) {
+                          return Text('${snapshot.error}');
+
+                        }
+                        // Por defecto, muestra un indicador de carga.
+                        return const CircularProgressIndicator();
+                      },
+                    ),
+                      
                     ),
                   ],
                 ),
