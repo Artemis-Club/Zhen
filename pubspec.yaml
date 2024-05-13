@@ -39,6 +39,7 @@ dependencies:
   geolocator:
   flutter_polyline_points:
   file_picker:
+  path_provider: ^2.0.8
 
   weather_icons: ^3.0.0
 

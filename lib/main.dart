@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
@@ -17,6 +19,8 @@ import 'ActivityInProgress.dart';
 import 'ActivityTimer.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+
 
 
 void main() async {
@@ -735,7 +739,7 @@ class _Screen3State extends State<Screen3> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           // Usa el operador?? para proporcionar un valor predeterminado en caso de que snapshot.data sea nulo.
-                          if(snapshot.data == "few clouds" || snapshot.data == "scattered clouds" || snapshot.data == "broken clouds"){
+                          if(snapshot.data == "few clouds" || snapshot.data == "scattered clouds" || snapshot.data == "broken clouds" || snapshot.data == "overcast clouds"){
                             return  Column(
                               children: [
                                 Image.asset(
@@ -743,7 +747,7 @@ class _Screen3State extends State<Screen3> {
                                   width: 100,
                                   height: 100,
                                 ),
-                                Text("nublado")
+                                Text("Nublado")
 
                               ],
                             );
@@ -756,7 +760,7 @@ class _Screen3State extends State<Screen3> {
                                   width: 100,
                                   height: 100,
                                 ),
-                                Text("lluvia")
+                                Text("Lluvia")
                               ],
                             );
                           }
@@ -768,7 +772,7 @@ class _Screen3State extends State<Screen3> {
                                   width: 100,
                                   height: 100,
                                 ),
-                                Text("niebla")
+                                Text("Niebla")
                               ],
                             );
                           }
@@ -780,7 +784,7 @@ class _Screen3State extends State<Screen3> {
                                   width: 100,
                                   height: 100,
                                 ),
-                                Text("nevando")
+                                Text("Nevando")
                               ],
                             );
                           }
@@ -792,7 +796,7 @@ class _Screen3State extends State<Screen3> {
                                   width: 100,
                                   height: 100,
                                 ),
-                                Text("tormenta")
+                                Text("Tormenta")
                               ],
                             );
                           }
@@ -804,7 +808,7 @@ class _Screen3State extends State<Screen3> {
                                   width: 100,
                                   height: 100,
                                 ),
-                                Text("cielo despejado")
+                                Text("Cielo despejado")
                               ],
                             );
                           }
@@ -963,6 +967,22 @@ class _Screen2State extends State<Screen2> {
   void initState() {
     super.initState();
     _loadMapStyle();
+  }
+
+  Future<Set<Marker>> leerJson() async {
+    // Load the JSON file as a string
+    final jsonString = await rootBundle.loadString('files/contenidors-de-roba-contenedores-de-ropa.json');
+
+    // Decode the JSON string into a List<Map<String, dynamic>>
+    final List<dynamic> jsonData = jsonDecode(jsonString);
+
+    return jsonData.map((json) {
+      final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
+      return Marker(
+        markerId: MarkerId(json['objectid'].toString()),
+        position: position,
+        infoWindow: InfoWindow(title: json['empresa']),
+      );}).toSet();
   }
 
   @override

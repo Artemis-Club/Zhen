@@ -98,3 +98,11 @@ class TransporteScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+leerJson().then((markers) {
+setState(() {
+_markers = markers;
+});
+});
