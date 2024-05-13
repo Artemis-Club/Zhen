@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:weather_icons/weather_icons.dart'; // Asegúrate de importar la biblioteca de íconos de clima
 
 class weatherIconScreen extends StatelessWidget {
-  const weatherIconScreen({Key? key}) : super(key: key);
+  const weatherIconScreen({super.key});
 
   Future<String> weather() async {
     final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Valencia,es&appid=1fc6a21d7c1a05d3aff1156d71ff425f&units=metric&lang=es'));
@@ -37,7 +37,7 @@ class weatherIconScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Asegúrate de que el código del ícono es válido y corresponde a un ícono existente en la biblioteca weather_icons
-                  BoxedIcon(WeatherIcons.fromString(snapshot.data?.split('\n')?.last?? 'fallback_icon_code')),
+                  BoxedIcon(WeatherIcons.fromString(snapshot.data?.split('\n').last?? 'fallback_icon_code')),
 
                   Text(snapshot.data?? 'Cargando...'),
                 ],
@@ -45,7 +45,7 @@ class weatherIconScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           },
         ),
       ),
