@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:codethon_project_dart/Transporte.dart';
-import 'package:codethon_project_dart/weatherIcon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -10,18 +8,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:html';
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io' as io;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'pointsManager.dart';
 import 'activity_details_dialog.dart';
 import 'ActivityInProgress.dart';
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
+import 'ActivityTimer.dart';
 
 
 void main() async {
@@ -36,21 +29,6 @@ void main() async {
   await Permission.location.request();
 
   runApp(MyApp(dbService: dbService));
-}
-
-Future<String> weather() async {
-  final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Valencia,es&appid=1fc6a21d7c1a05d3aff1156d71ff425f&units=metric&lang=en'));
-
-  if (response.statusCode == 200) {
-    // Si la petición fue exitosa, parseamos el JSON.
-    var data = jsonDecode(response.body);
-    String weatherDescription = data['weather'][0]['description'];
-    //double temperature = data['main']['temp'];
-    return weatherDescription;
-  } else {
-    // Si la petición falló, lanzamos un error.
-    throw Exception('Failed to load weather data');
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -84,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 1;
   final List<Widget> _children = [
     const Screen3(),
-    Screen2(),
+    const Screen2(),
     Screen4(),
   ];
 
@@ -372,10 +350,10 @@ class _Screen2State extends State<Screen2> {
 }
 */
 
-
+/*
 
 class Screen3 extends StatefulWidget {
-  const Screen3({Key? key}) : super(key: key);
+  const Screen3({super.key});
 
   @override
   _Screen3State createState() => _Screen3State();
@@ -415,22 +393,35 @@ class _Screen3State extends State<Screen3> {
     final screen4 = screen4StateKey.currentState;
     if (screen4 == null) {
       // Si screen4 es null, muestra un indicador de carga o un widget alternativo
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     final pointsManager = PointsManager();  // Asumiendo que tienes una instancia correcta
-
+    List<Map<String, dynamic>> rewards = [
+      {
+        "name": "Premio 1",
+        "imagePath": "images/premio1.png",
+        "targetPoints": 3000,
+      },
+      {
+        "name": "Premio 2",
+        "imagePath": "images/premio2.png",
+        "targetPoints": 5000,
+      },
+      // Agrega más premios según necesario
+    ];
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
         middle: Text('Nueva Actividad'),
         backgroundColor: Color(0xFFF5F5DC),
       ),
-      backgroundColor: Color(0xFFF5F5DC),
+      backgroundColor: const Color(0xFFF5F5DC),
 
       child: SafeArea(
+
         child: Column(
           children: [
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             // Otros componentes aquí...
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -447,18 +438,18 @@ class _Screen3State extends State<Screen3> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CircleAvatar(
-                            backgroundImage: screen4.profileImage ?? AssetImage('images/UsuarioSinFoto.png'),
+                            backgroundImage: screen4.profileImage ?? const AssetImage('images/UsuarioSinFoto.png'),
                             radius: 25,
                           ),
                           Text(
                             screen4.username,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                           ),
                           Row(
                             children: [
                               Text(
                                 '${pointsManager.points} ',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                               ),
                               Image.asset(
                                 'images/Naranjitos.png',
@@ -471,94 +462,20 @@ class _Screen3State extends State<Screen3> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10,height: 10),
+                  const SizedBox(width: 20),
                   Expanded(
-                    child: FutureBuilder<String?>(
-                      future: weather(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          // Usa el operador?? para proporcionar un valor predeterminado en caso de que snapshot.data sea nulo.
-                          if(snapshot.data == "few clouds" || snapshot.data == "scattered clouds" || snapshot.data == "broken clouds"){
-                            return Column(
-                              children: [
-                                Image.asset(
-                                  "images/nublado.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "shower rain" || snapshot.data == "rain"){
-                            return Column(
-                              children: [
-                                Image.asset(
-                                  "images/lloviendo.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "mist"){
-                            return Column(
-                              children: [
-                                Image.asset(
-                                  "images/niebla.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "snow"){
-                            return Column(
-                              children: [
-                                Image.asset(
-                                  "images/nievee.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "thunderstorm"){
-                            return Column(
-                              children: [
-                                Image.asset(
-                                  "images/tormenta.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "clear sky"){
-                            return Column(
-                              children: [
-                                Image.asset(
-                                  "images/soleado.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              ],
-                            );
-                          }
-                          return Text(snapshot.data?? 'Cargando...');
-                        } else if (snapshot.hasError) {
-                          return Text('${snapshot.error}');
-
-                        }
-                        // Por defecto, muestra un indicador de carga.
-                        return CircularProgressIndicator();
-                      },
+                    child: Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.indigoAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             if (_isActivityInProgress)
               ActivityInProgress(
                 activityName: _currentActivityName,
@@ -567,7 +484,7 @@ class _Screen3State extends State<Screen3> {
                 onReset: resetActivity,
               ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -579,12 +496,44 @@ class _Screen3State extends State<Screen3> {
                 ),
               ),
             ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.lightBlueAccent[100],  // Un color que resalte pero que combine
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: rewards.map((reward) => buildRewardProgress(reward, pointsManager.points)).toList(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
+  Widget buildRewardProgress(Map<String, dynamic> reward, int currentPoints) {
+    double progress = (currentPoints / reward['targetPoints']).clamp(0.0, 1.0);
+    return Column(
+      children: [
+        Text("${reward['name']} (${currentPoints}/${reward['targetPoints']})"),
+        LinearProgressIndicator(
+          value: progress,
+          backgroundColor: Colors.grey[300],
+          color: Colors.green,
+        ),
+        Row(
+          children: [
+            Image.asset(reward['imagePath'], width: 50, height: 50),
+            Text(reward['name']),
+          ],
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
 
   Widget _buildActivityCard(int index, BuildContext context) {
     List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
@@ -597,7 +546,7 @@ class _Screen3State extends State<Screen3> {
     ];
     PointsManager pointsManager = PointsManager();
 
-    return GestureDetector(
+    /*return GestureDetector(
       onTap: () => ActivityDetailsDialog.show(
           context,
           titles[index],  // El título de la actividad
@@ -606,7 +555,24 @@ class _Screen3State extends State<Screen3> {
           pointsManager.getUnitForActivity(activityNames[index]),  // La unidad para la actividad (minutos o kilómetros)
               () => startActivity(activityNames[index], pointsManager.getUnitForActivity(activityNames[index]) == "kilómetro"),  // onStart callback
               stopActivity  // () => stopActivity()
-      ),
+      ),*/
+    return GestureDetector(
+      onTap: () {
+        final ActivityTimerState timerState = ActivityTimerState(); // Suponiendo que puedas obtener el estado de alguna manera.
+
+        // Mostrar el diálogo y empezar el temporizador
+        ActivityDetailsDialog.show(
+            context,
+            titles[index], // El título de la actividad
+            activityNames[index], // El nombre de la actividad
+            pointsManager.getPointsForActivity(activityNames[index]), // Los puntos por unidad para la actividad
+            pointsManager.getUnitForActivity(activityNames[index]), // La unidad para la actividad (minutos o kilómetros)
+            timerState // Pasando el estado de ActivityTimer
+        );
+
+        // Iniciar el temporizador
+        timerState.startTimer();
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -624,12 +590,247 @@ class _Screen3State extends State<Screen3> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Color(0xFFF5F5DC),
+                color: const Color(0xFFF5F5DC),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
                 titles[index],
-                style: TextStyle(
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+  }
+}*/
+
+
+class Screen3 extends StatefulWidget {
+  const Screen3({Key? key}) : super(key: key);
+
+  @override
+  _Screen3State createState() => _Screen3State();
+}
+
+class _Screen3State extends State<Screen3> {
+  bool _isActivityInProgress = false;
+  String _currentActivityName = '';
+  bool _isKilometers = false;
+
+  void startActivity(String activityName, bool isKilometers) {
+    if (!_isActivityInProgress) {
+      setState(() {
+        _isActivityInProgress = true;
+        _currentActivityName = activityName;
+        _isKilometers = isKilometers;
+      });
+    }
+  }
+
+  void stopActivity() {
+    setState(() {
+      _isActivityInProgress = false;
+    });
+  }
+
+  void resetActivity() {
+    setState(() {
+      _isActivityInProgress = false;
+      _currentActivityName = '';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screen4 = screen4StateKey.currentState;
+    if (screen4 == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final pointsManager = PointsManager();
+    List<Map<String, dynamic>> rewards = [
+      {"name": "Camiseta oficial del Valencia CF", "imagePath": "images/CamisetaVal1.png", "targetPoints": 3000},
+      {"name": "2 entradas para Oceanografic", "imagePath": "images/Oceanografic.png", "targetPoints": 5000},
+    ];
+
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Nueva Actividad'),
+        backgroundColor: Color(0xFFF5F5DC),
+      ),
+      backgroundColor: const Color(0xFFF5F5DC),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.indigoAccent,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: screen4.profileImage ?? const AssetImage('images/UsuarioSinFoto.png'),
+                              radius: 25,
+                            ),
+                            Text(
+                              screen4.username,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  '${pointsManager.points} ',
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                                ),
+                                Image.asset(
+                                  'images/Naranjitos.png',
+                                  width: 24,
+                                  height: 24,
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.indigoAccent,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (_isActivityInProgress)
+                ActivityInProgress(
+                  activityName: _currentActivityName,
+                  isKilometers: _isKilometers,
+                  onStop: stopActivity,
+                  onReset: resetActivity,
+                ),
+              const SizedBox(height: 16),
+              GridView.count(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                children: List.generate(4, (index) => _buildActivityCard(index, context)),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.teal[100],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: rewards.map((reward) => buildRewardProgress(reward, pointsManager.points)).toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildRewardProgress(Map<String, dynamic> reward, int currentPoints) {
+    double progress = (currentPoints / reward['targetPoints']).clamp(0.0, 1.0);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("${reward['name']} (${currentPoints}/${reward['targetPoints']})",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            Image.asset(reward['imagePath'], width: 50, height: 50),
+          ],
+        ),
+        LinearProgressIndicator(
+          value: progress,
+          backgroundColor: Colors.grey[300],
+          color: Colors.green,
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Widget _buildActivityCard(int index, BuildContext context) {
+    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
+    List<String> activityNames = ["Montar en bicicleta", "Usar transporte público", "Usar coche eléctrico", "Salir a andar"];
+    List<String> imageNames = [
+      'images/Bicicletas.png',
+      'images/TransportePublico.png',
+      'images/CocheElectrico.png',
+      'images/Andando.png'
+    ];
+    PointsManager pointsManager = PointsManager();
+
+    return GestureDetector(
+      onTap: () {
+        final ActivityTimerState timerState = ActivityTimerState(); // Suponiendo que puedas obtener el estado de alguna manera.
+
+        // Mostrar el diálogo y empezar el temporizador
+        ActivityDetailsDialog.show(
+            context,
+            titles[index], // El título de la actividad
+            activityNames[index], // El nombre de la actividad
+            pointsManager.getPointsForActivity(activityNames[index]), // Los puntos por unidad para la actividad
+            pointsManager.getUnitForActivity(activityNames[index]), // La unidad para la actividad (minutos o kilómetros)
+            timerState // Pasando el estado de ActivityTimer
+        );
+
+        // Iniciar el temporizador
+        timerState.startTimer();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey, width: 1),
+          image: DecorationImage(
+            image: AssetImage(imageNames[index]),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5DC),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                titles[index],
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -646,6 +847,8 @@ class _Screen3State extends State<Screen3> {
 //LOCALIZADOR DE MOVIMIENTO
 
 class Screen2 extends StatefulWidget {
+  const Screen2({super.key});
+
   @override
   _Screen2State createState() => _Screen2State();
 }
@@ -653,7 +856,7 @@ class Screen2 extends StatefulWidget {
 class _Screen2State extends State<Screen2> {
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
-  double _zoomLevel = 18.0;  // Nivel de zoom inicial deseado.
+  final double _zoomLevel = 18.0;  // Nivel de zoom inicial deseado.
   StreamSubscription<Position>? _positionStreamSubscription;
 
   @override
@@ -677,7 +880,7 @@ class _Screen2State extends State<Screen2> {
   }
 
   void _startListeningToLocation() {
-    final locationSettings = LocationSettings(
+    const locationSettings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
       distanceFilter: 5,  // Cambio mínimo de 5 metros antes de actualizar la ubicación.
     );
@@ -695,9 +898,9 @@ class _Screen2State extends State<Screen2> {
     setState(() {
       _markers = {
         Marker(
-          markerId: MarkerId('userLocation'),
+          markerId: const MarkerId('userLocation'),
           position: newPosition,
-          infoWindow: InfoWindow(title: 'Tu Ubicación'),
+          infoWindow: const InfoWindow(title: 'Tu Ubicación'),
         ),
       };
     });
@@ -719,7 +922,7 @@ class _Screen2State extends State<Screen2> {
         myLocationEnabled: true,
         markers: _markers,
         initialCameraPosition: CameraPosition(
-          target: LatLng(0, 0),  // Punto inicial genérico.
+          target: const LatLng(0, 0),  // Punto inicial genérico.
           zoom: _zoomLevel,
         ),
         onMapCreated: _onMapCreated,
@@ -992,7 +1195,7 @@ class _Screen4State extends State<Screen4> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Editar nombre de Usuario'),
+          title: const Text('Editar nombre de Usuario'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1007,7 +1210,7 @@ class _Screen4State extends State<Screen4> {
                   _username = value;
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -1015,10 +1218,10 @@ class _Screen4State extends State<Screen4> {
                     onPressed: () {
                       Navigator.of(context).pop(); // Cancelar
                     },
-                    child: Text('Cancelar'),
                     style: TextButton.styleFrom(
                       foregroundColor: _isHovering ? Colors.grey[500] : Colors.black,
                     ),
+                    child: const Text('Cancelar'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -1027,10 +1230,10 @@ class _Screen4State extends State<Screen4> {
                       });
                       Navigator.of(context).pop(); // Cerrar el diálogo
                     },
-                    child: Text('Confirmar'),
                     style: TextButton.styleFrom(
                       foregroundColor: _isHovering ? Colors.grey[500] : Colors.black,
                     ),
+                    child: const Text('Confirmar'),
                   ),
                 ],
               ),
@@ -1124,14 +1327,12 @@ class _Screen4State extends State<Screen4> {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundColor: _isHovering ? Colors.grey.shade500 : Colors.transparent,
-                          backgroundImage: _profileImage == null
-                              ? const AssetImage('images/UsuarioSinFoto.png')
-                              : _profileImage,
+                          backgroundImage: _profileImage ?? const AssetImage('images/UsuarioSinFoto.png'),
                         ),
                       ),
                     ),
                     if (_isHovering)
-                      Text(
+                      const Text(
                         'Editar foto',
                         style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
@@ -1145,10 +1346,10 @@ class _Screen4State extends State<Screen4> {
             children: [
               Text(
                 _username,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               IconButton(
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 onPressed: _showUsernameDialog,
                 color: Colors.black, // Mantén el color normal
               ),

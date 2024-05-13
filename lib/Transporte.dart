@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class TransporteScreen extends StatelessWidget {
-  const TransporteScreen({Key? key}) : super(key: key);
+  const TransporteScreen({super.key});
 
   Future<String> weather() async {
     final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Valencia,es&appid=1fc6a21d7c1a05d3aff1156d71ff425f&units=metric&lang=en'));
@@ -31,7 +31,7 @@ class TransporteScreen extends StatelessWidget {
             if (snapshot.hasData) {
               // Usa el operador?? para proporcionar un valor predeterminado en caso de que snapshot.data sea nulo.
               if(snapshot.data == "few clouds" || snapshot.data == "scattered clouds" || snapshot.data == "broken clouds"){
-                return Column(
+                return const Column(
                 children: [
                   Image(
                       image: AssetImage("images/nublado.png"),
@@ -41,7 +41,7 @@ class TransporteScreen extends StatelessWidget {
               );
               }
               else if(snapshot.data == "shower rain" || snapshot.data == "rain"){
-                return Column(
+                return const Column(
                   children: [
                     Image(
                       image: AssetImage("images/lloviendo.png"),
@@ -50,7 +50,7 @@ class TransporteScreen extends StatelessWidget {
                 );
               }
               else if(snapshot.data == "mist"){
-                return Column(
+                return const Column(
                   children: [
                     Image(
                       image: AssetImage("images/niebla.png"),
@@ -59,7 +59,7 @@ class TransporteScreen extends StatelessWidget {
                 );
               }
               else if(snapshot.data == "snow"){
-                return Column(
+                return const Column(
                   children: [
                     Image(
                       image: AssetImage("images/nievee.png"),
@@ -68,7 +68,7 @@ class TransporteScreen extends StatelessWidget {
                 );
               }
               else if(snapshot.data == "thunderstorm"){
-                return Column(
+                return const Column(
                   children: [
                     Image(
                       image: AssetImage("images/tormenta.png"),
@@ -77,7 +77,7 @@ class TransporteScreen extends StatelessWidget {
                 );
               }
               else if(snapshot.data == "clear sky"){
-                return Column(
+                return const Column(
                   children: [
                     Image(
                       image: AssetImage("images/soleado.png"),
@@ -91,7 +91,7 @@ class TransporteScreen extends StatelessWidget {
 
             }
             // Por defecto, muestra un indicador de carga.
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           },
         ),
       ),
