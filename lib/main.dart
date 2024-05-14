@@ -21,7 +21,7 @@ import 'ActivityInProgress.dart';
 import 'ActivityTimer.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:provider/provider.dart';
 
 
 
@@ -36,15 +36,20 @@ void main() async {
   // Solicitar permisos de ubicación
   await Permission.location.request();
 
-  runApp(MyApp(dbService: dbService));
+  //runApp(MyApp(dbService: dbService));}
+  runApp(
+    ChangeNotifierProvider<UserProfile>(
+      create: (_) => UserProfile('BELLINGHAM', AssetImage('images/FotoPerfil.png')),
+      child: MyApp(dbService: dbService),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   final DBService dbService;
+
   const MyApp({super.key, required this.dbService});
-
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -205,423 +210,9 @@ class _Screen2State extends State<Screen2> {
 
 
 
-//TODO BASTANTE BIEN SIN ERRORES
-/*class Screen3 extends StatelessWidget {
-  const Screen3({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final _Screen4State screen4 = screen4StateKey.currentState!;
-    final pointsManager = PointsManager();  // Asumiendo que tienes una instancia correcta
-
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Nueva Actividad'),
-        backgroundColor: Color(0xFFF5F5DC),
-      ),
-      backgroundColor: Color(0xFFF5F5DC),
-      child: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.indigoAccent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: screen4.profileImage ?? AssetImage('images/UsuarioSinFoto.png'),
-                            radius: 25,
-                          ),
-                          Text(
-                            screen4.username,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '${pointsManager.points} ',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-                              ),
-                              Image.asset(
-                                'images/Naranjitos.png',
-                                width: 24,
-                                height: 24,
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.indigoAccent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  children: List.generate(4, (index) => _buildActivityCard(index, context)),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActivityCard(int index, BuildContext context) {
-    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
-    List<String> activityNames = ["Montar en bicicleta", "Usar transporte público", "Usar coche eléctrico", "Salir a andar"];
-    List<String> imageNames = [
-      'images/Bicicletas.png',
-      'images/TransportePublico.png',
-      'images/CocheElectrico.png',
-      'images/Andando.png'
-    ];
-    PointsManager pointsManager = PointsManager();
-    return GestureDetector(
-      onTap: () => ActivityDetailsDialog.show(
-          context,
-          titles[index],
-          activityNames[index],  // Asegura que el nombre de la actividad es correcto
-          pointsManager.getPointsForActivity(activityNames[index]),  // Obtiene puntos para la actividad
-          pointsManager.getUnitForActivity(activityNames[index])
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey, width: 1),
-          image: DecorationImage(
-            image: AssetImage(imageNames[index]),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Color(0xFFF5F5DC),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                titles[index],
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  int getPointsPerUnit(String activityName) {
-    // Aquí iría la lógica para determinar los puntos por unidad según la actividad
-    return 10;  // Valor de ejemplo
-  }
-
-  String getUnit(String activityName) {
-    // Aquí iría la lógica para determinar la unidad (minutos, kilómetros, etc.) según la actividad
-    return "minuto";  // Valor de ejemplo
-  }
-
-}
-*/
-
-/*
-
-class Screen3 extends StatefulWidget {
-  const Screen3({super.key});
-
-  @override
-  _Screen3State createState() => _Screen3State();
-}
-
-class _Screen3State extends State<Screen3> {
-  bool _isActivityInProgress = false;
-  String _currentActivityName = '';
-  bool _isKilometers = false;
-
-  void startActivity(String activityName, bool isKilometers) {
-    if (!_isActivityInProgress) { // Asegura que no se reinicie si ya está en progreso
-      setState(() {
-        _isActivityInProgress = true;
-        _currentActivityName = activityName;
-        _isKilometers = isKilometers;
-      });
-    }
-  }
-
-  void stopActivity() {
-    setState(() {
-      _isActivityInProgress = false;
-    });
-  }
-
-  void resetActivity() {
-    setState(() {
-      _isActivityInProgress = false;
-      _currentActivityName = '';
-    });
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    final screen4 = screen4StateKey.currentState;
-    if (screen4 == null) {
-      // Si screen4 es null, muestra un indicador de carga o un widget alternativo
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final pointsManager = PointsManager();  // Asumiendo que tienes una instancia correcta
-    List<Map<String, dynamic>> rewards = [
-      {
-        "name": "Premio 1",
-        "imagePath": "images/premio1.png",
-        "targetPoints": 3000,
-      },
-      {
-        "name": "Premio 2",
-        "imagePath": "images/premio2.png",
-        "targetPoints": 5000,
-      },
-      // Agrega más premios según necesario
-    ];
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Nueva Actividad'),
-        backgroundColor: Color(0xFFF5F5DC),
-      ),
-      backgroundColor: const Color(0xFFF5F5DC),
-
-      child: SafeArea(
-
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            // Otros componentes aquí...
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.indigoAccent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: screen4.profileImage ?? const AssetImage('images/UsuarioSinFoto.png'),
-                            radius: 25,
-                          ),
-                          Text(
-                            screen4.username,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '${pointsManager.points} ',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-                              ),
-                              Image.asset(
-                                'images/Naranjitos.png',
-                                width: 24,
-                                height: 24,
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.indigoAccent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (_isActivityInProgress)
-              ActivityInProgress(
-                activityName: _currentActivityName,
-                isKilometers: _isKilometers,
-                onStop: stopActivity,
-                onReset: resetActivity,
-              ),
-
-            const SizedBox(height: 16),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  children: List.generate(4, (index) => _buildActivityCard(index, context)),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent[100],  // Un color que resalte pero que combine
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  children: rewards.map((reward) => buildRewardProgress(reward, pointsManager.points)).toList(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildRewardProgress(Map<String, dynamic> reward, int currentPoints) {
-    double progress = (currentPoints / reward['targetPoints']).clamp(0.0, 1.0);
-    return Column(
-      children: [
-        Text("${reward['name']} (${currentPoints}/${reward['targetPoints']})"),
-        LinearProgressIndicator(
-          value: progress,
-          backgroundColor: Colors.grey[300],
-          color: Colors.green,
-        ),
-        Row(
-          children: [
-            Image.asset(reward['imagePath'], width: 50, height: 50),
-            Text(reward['name']),
-          ],
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-
-  Widget _buildActivityCard(int index, BuildContext context) {
-    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
-    List<String> activityNames = ["Montar en bicicleta", "Usar transporte público", "Usar coche eléctrico", "Salir a andar"];
-    List<String> imageNames = [
-      'images/Bicicletas.png',
-      'images/TransportePublico.png',
-      'images/CocheElectrico.png',
-      'images/Andando.png'
-    ];
-    PointsManager pointsManager = PointsManager();
-
-    /*return GestureDetector(
-      onTap: () => ActivityDetailsDialog.show(
-          context,
-          titles[index],  // El título de la actividad
-          activityNames[index],  // El nombre de la actividad
-          pointsManager.getPointsForActivity(activityNames[index]),  // Los puntos por unidad para la actividad
-          pointsManager.getUnitForActivity(activityNames[index]),  // La unidad para la actividad (minutos o kilómetros)
-              () => startActivity(activityNames[index], pointsManager.getUnitForActivity(activityNames[index]) == "kilómetro"),  // onStart callback
-              stopActivity  // () => stopActivity()
-      ),*/
-    return GestureDetector(
-      onTap: () {
-        final ActivityTimerState timerState = ActivityTimerState(); // Suponiendo que puedas obtener el estado de alguna manera.
-
-        // Mostrar el diálogo y empezar el temporizador
-        ActivityDetailsDialog.show(
-            context,
-            titles[index], // El título de la actividad
-            activityNames[index], // El nombre de la actividad
-            pointsManager.getPointsForActivity(activityNames[index]), // Los puntos por unidad para la actividad
-            pointsManager.getUnitForActivity(activityNames[index]), // La unidad para la actividad (minutos o kilómetros)
-            timerState // Pasando el estado de ActivityTimer
-        );
-
-        // Iniciar el temporizador
-        timerState.startTimer();
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey, width: 1),
-          image: DecorationImage(
-            image: AssetImage(imageNames[index]),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F5DC),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                titles[index],
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-  }
-}*/
-
-
-class Screen3 extends StatefulWidget {
+//ULTIMA IMPLEMENTACION SIN FALLOS PERO CAQUITA CON EL TIMER
+/*class Screen3 extends StatefulWidget {
   const Screen3({Key? key}) : super(key: key);
 
   @override
@@ -919,20 +510,20 @@ class _Screen3State extends State<Screen3> {
 
     return GestureDetector(
       onTap: () {
-        final ActivityTimerState timerState = ActivityTimerState(); // Suponiendo que puedas obtener el estado de alguna manera.
+        // Crear una nueva instancia de ActivityTimerState para manejar el timer
+        ActivityTimerState timerState = ActivityTimerState(); // Asumimos que esta es la forma correcta de obtener/crear una instancia.
 
-        // Mostrar el diálogo y empezar el temporizador
+        // Mostrar el diálogo y pasar el estado del timer
         ActivityDetailsDialog.show(
             context,
-            titles[index], // El título de la actividad
-            activityNames[index], // El nombre de la actividad
-            pointsManager.getPointsForActivity(activityNames[index]), // Los puntos por unidad para la actividad
-            pointsManager.getUnitForActivity(activityNames[index]), // La unidad para la actividad (minutos o kilómetros)
-            timerState // Pasando el estado de ActivityTimer
+            titles[index],
+            activityNames[index],
+            pointsManager.getPointsForActivity(activityNames[index]),
+            pointsManager.getUnitForActivity(activityNames[index]),
+            timerState
         );
 
-        // Iniciar el temporizador
-        timerState.startTimer();
+        // Nota: Ya no necesitamos llamar a startTimer aquí porque `ActivityDetailsDialog` manejará esto
       },
       child: Container(
         decoration: BoxDecoration(
@@ -969,6 +560,354 @@ class _Screen3State extends State<Screen3> {
     );
   }
 }
+*/
+
+
+class Screen3 extends StatefulWidget {
+  const Screen3({Key? key}) : super(key: key);
+
+  @override
+  _Screen3State createState() => _Screen3State();
+}
+
+class _Screen3State extends State<Screen3> {
+  bool _isActivityInProgress = false;
+  String _currentActivityName = '';
+  bool _isKilometers = false;
+
+  void startActivity(String activityName, bool isKilometers) {
+    setState(() {
+      _isActivityInProgress = true;
+      _currentActivityName = activityName;
+      _isKilometers = isKilometers;
+    });
+  }
+
+  void stopActivity() {
+    setState(() {
+      _isActivityInProgress = false;
+    });
+  }
+
+  void resetActivity() {
+    setState(() {
+      _isActivityInProgress = false;
+      _currentActivityName = '';
+    });
+  }
+  Future<String> weather() async {
+    final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Valencia,es&appid=1fc6a21d7c1a05d3aff1156d71ff425f&units=metric&lang=en'));
+
+    if (response.statusCode == 200) {
+      // Si la petición fue exitosa, parseamos el JSON.
+      var data = jsonDecode(response.body);
+      String weatherDescription = data['weather'][0]['description'];
+      double temperature = data['main']['temp'];
+      return weatherDescription;
+    } else {
+      // Si la petición falló, lanzamos un error.
+      throw Exception('Failed to load weather data');
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    //UserProfile userProfile = Provider.of<UserProfile>(context, listen: true);
+    return Consumer<UserProfile>(
+        builder: (context, userProfile, child) {
+
+
+
+    final pointsManager = PointsManager();
+    List<Map<String, dynamic>> rewards = [
+      {"name": "Camiseta oficial del Valencia CF", "imagePath": "images/CamisetaVal1.png", "targetPoints": 3000},
+      {"name": "2 entradas para Oceanografic", "imagePath": "images/Oceanografic.png", "targetPoints": 5000},
+      {"name": "Bono EMT gratuito", "imagePath": "images/bonometro.png", "targetPoints": 850},
+      {"name": "Tarjeta regalo El Corte Inglés", "imagePath": "images/tarjetaregalo.png", "targetPoints": 1500},
+    ];
+
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Nueva Actividad'),
+        backgroundColor: Color(0xFFF5F5DC),
+      ),
+      backgroundColor: const Color(0xFFF5F5DC),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.indigoAccent,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CircleAvatar(
+                              //backgroundImage: screen4.profileImage ?? const AssetImage('images/UsuarioSinFoto.png'),
+                              backgroundImage: userProfile.profileImage ?? const AssetImage('images/UsuarioSinFoto.png'),
+                              radius: 25,
+
+                            ),
+                            Text(
+                              //screen4.username,
+                                userProfile.username,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  '${pointsManager.points} ',
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                                ),
+                                Image.asset(
+                                  'images/Naranjitos.png',
+                                  width: 24,
+                                  height: 24,
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: FutureBuilder<String?>(
+                        future: weather(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            // Usa el operador?? para proporcionar un valor predeterminado en caso de que snapshot.data sea nulo.
+                            if(snapshot.data == "few clouds" || snapshot.data == "scattered clouds" || snapshot.data == "broken clouds" || snapshot.data == "overcast clouds"){
+                              return  Column(
+                                children: [
+                                  Image.asset(
+                                    "images/nublado.png",
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  Text("Nublado")
+
+                                ],
+                              );
+                            }
+                            else if(snapshot.data == "shower rain" || snapshot.data == "rain"){
+                              return Column(
+                                children: [
+                                  Image.asset(
+                                    "images/lloviendo.png",
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  Text("Lluvia")
+                                ],
+                              );
+                            }
+                            else if(snapshot.data == "mist"){
+                              return  Column(
+                                children: [
+                                  Image.asset(
+                                    "images/niebla.png",
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  Text("Niebla")
+                                ],
+                              );
+                            }
+                            else if(snapshot.data == "snow"){
+                              return  Column(
+                                children: [
+                                  Image.asset(
+                                    "images/nievee.png",
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  Text("Nevando")
+                                ],
+                              );
+                            }
+                            else if(snapshot.data == "thunderstorm"){
+                              return  Column(
+                                children: [
+                                  Image.asset(
+                                    "images/tormenta.png",
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  Text("Tormenta")
+                                ],
+                              );
+                            }
+                            else if(snapshot.data == "clear sky"){
+                              return  Column(
+                                children: [
+                                  Image.asset(
+                                    "images/soleado.png",
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                  Text("Cielo despejado")
+                                ],
+                              );
+                            }
+                            return Text(snapshot.data?? 'Cargando...');
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+
+                          }
+                          // Por defecto, muestra un indicador de carga.
+                          return const CircularProgressIndicator();
+                        },
+                      ),
+
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (_isActivityInProgress)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0), // Añade margen a los lados
+                  child: ActivityInProgress(
+                    activityName: _currentActivityName,
+                    isKilometers: _isKilometers,
+                    onStop: stopActivity,
+                    onReset: resetActivity,
+                  ),
+                ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0), // Margen horizontal para la grilla
+                child: GridView.count(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  children: List.generate(4, (index) => _buildActivityCard(index, context)),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.teal[100],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: rewards.map((reward) => buildRewardProgress(reward, pointsManager.points)).toList(),
+                ),
+              ),
+                  ],
+                ),
+              ),
+    ),
+          );
+
+        },
+    );
+  }
+
+
+  Widget buildRewardProgress(Map<String, dynamic> reward, int currentPoints) {
+    double progress = (currentPoints / reward['targetPoints']).clamp(0.0, 1.0);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("${reward['name']} (${currentPoints}/${reward['targetPoints']})",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            Image.asset(reward['imagePath'], width: 50, height: 50),
+          ],
+        ),
+        LinearProgressIndicator(
+          value: progress,
+          backgroundColor: Colors.grey[300],
+          color: Colors.green,
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Widget _buildActivityCard(int index, BuildContext context) {
+    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
+    List<String> activityNames = ["Montar en bicicleta", "Usar transporte público", "Usar coche eléctrico", "Salir a andar"];
+    List<bool> isKilometersList = [false, true, true, false]; // Determina si la actividad se mide por kilómetros
+    List<String> imageNames = [
+      'images/Bicicletas.png',
+      'images/TransportePublico.png',
+      'images/CocheElectrico.png',
+      'images/Andando.png'
+    ];
+    PointsManager pointsManager = PointsManager();
+
+    return GestureDetector(
+      onTap: () {
+        // Determinar si la actividad usa kilómetros basado en el índice
+        bool isKilometers = isKilometersList[index];
+
+        // Mostrar el diálogo y pasar el estado del timer
+        ActivityDetailsDialog.show(
+            context,
+            titles[index],
+            activityNames[index],
+            pointsManager.getPointsForActivity(activityNames[index]),
+            pointsManager.getUnitForActivity(activityNames[index]),
+                () {
+              startActivity(activityNames[index], isKilometers);
+            }
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey, width: 1),
+          image: DecorationImage(
+            image: AssetImage(imageNames[index]),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5DC),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                titles[index],
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 //LOCALIZADOR DE MOVIMIENTO
 
@@ -1328,7 +1267,25 @@ class _Screen4State extends State<Screen4> {
 }
 */
 
+class UserProfile extends ChangeNotifier {
+  String _username;
+  ImageProvider _profileImage;
 
+  UserProfile(this._username, this._profileImage);
+
+  String get username => _username;
+  ImageProvider get profileImage => _profileImage;
+
+  void setUsername(String username) {
+    _username = username;
+    notifyListeners();
+  }
+
+  void setProfileImage(ImageProvider image) {
+    _profileImage = image;
+    notifyListeners();
+  }
+}
 // Define un GlobalKey para el estado de Screen4.
 GlobalKey<_Screen4State> screen4StateKey = GlobalKey<_Screen4State>();
 
