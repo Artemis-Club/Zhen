@@ -42,6 +42,7 @@ dependencies:
   path_provider: ^2.0.8
 
   weather_icons: ^3.0.0
+  provider:
 
 
 
@@ -58,6 +59,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -93,6 +95,9 @@ flutter:
      - images/Naranjitos.png
      - images/CamisetaVal1.png
      - images/Oceanografic.png
+     - images/FotoPerfil.png
+     - images/bonometro.png
+     - images/tarjetaregalo.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
