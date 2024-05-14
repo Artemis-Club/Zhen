@@ -232,21 +232,6 @@ class _Screen3State extends State<Screen3> {
     }
   }
 
-  Future<String> weather() async {
-    final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Valencia,es&appid=1fc6a21d7c1a05d3aff1156d71ff425f&units=metric&lang=en'));
-
-    if (response.statusCode == 200) {
-      // Si la petición fue exitosa, parseamos el JSON.
-      var data = jsonDecode(response.body);
-      String weatherDescription = data['weather'][0]['description'];
-      double temperature = data['main']['temp'];
-      return weatherDescription;
-    } else {
-      // Si la petición falló, lanzamos un error.
-      throw Exception('Failed to load weather data');
-    }
-  }
-
   void stopActivity() {
     setState(() {
       _isActivityInProgress = false;
@@ -412,7 +397,7 @@ class _Screen3State extends State<Screen3> {
                         return const CircularProgressIndicator();
                       },
                     ),
-                      
+
                     ),
                   ],
                 ),

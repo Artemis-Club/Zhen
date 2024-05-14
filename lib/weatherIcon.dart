@@ -3,11 +3,13 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_icons/weather_icons.dart'; // Asegúrate de importar la biblioteca de íconos de clima
 
-class weatherIconScreen extends StatelessWidget {
-  const weatherIconScreen({super.key});
+class WeatherIconScreen extends StatelessWidget {
+  const WeatherIconScreen({super.key});
 
   Future<String> weather() async {
     final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=Valencia,es&appid=1fc6a21d7c1a05d3aff1156d71ff425f&units=metric&lang=es'));
@@ -23,21 +25,39 @@ class weatherIconScreen extends StatelessWidget {
     }
   }
 
+  Future<String> leerJson() async {
+    // Carga el archivo JSON como un Future<String>
+    final jsonString = await rootBundle.loadString('files/contenedores.json');
+
+    // Decodifica la cadena JSON en una List<Map<String, dynamic>>
+    final List<dynamic> jsonData = jsonDecode(jsonString);
+
+    // Convierte la lista de datos JSON en un Set<Marker>
+    final Set<Marker> markers = jsonData.map((json) {
+      final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
+      return Marker(
+        markerId: MarkerId(json['objectid'].toString()),
+        position: position,
+        infoWindow: InfoWindow(title: json['empresa']),
+      );
+    }).toSet();
+
+    return markers.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: FutureBuilder<String?>(
-          future: weather(),
+          future: leerJson(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               // Utiliza el código del ícono para mostrar el ícono de clima
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Asegúrate de que el código del ícono es válido y corresponde a un ícono existente en la biblioteca weather_icons
-                  BoxedIcon(WeatherIcons.fromString(snapshot.data?.split('\n').last?? 'fallback_icon_code')),
 
                   Text(snapshot.data?? 'Cargando...'),
                 ],
