@@ -100,9 +100,27 @@ class TransporteScreen extends StatelessWidget {
 }
 
 
-
+/*
 leerJson().then((markers) {
 setState(() {
 _markers = markers;
 });
 });
+
+Future<Set<Marker>> leerJson() async {
+// Load the JSON file as a string
+final jsonString = await rootBundle.loadString('files/contenedores.json');
+
+// Decode the JSON string into a List<Map<String, dynamic>>
+final List<dynamic> jsonData = jsonDecode(jsonString);
+
+return jsonData.map((json) {
+final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
+return Marker(
+markerId: MarkerId(json['objectid'].toString()),
+position: position,
+infoWindow: InfoWindow(title: json['empresa']),
+);}).toSet();
+}
+
+*/

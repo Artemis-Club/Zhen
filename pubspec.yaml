@@ -93,6 +93,7 @@ flutter:
      - images/Naranjitos.png
      - images/CamisetaVal1.png
      - images/Oceanografic.png
+     - files/contenedores.json
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

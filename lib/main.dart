@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:html';
 
+import 'package:codethon_project_dart/Transporte.dart';
+import 'package:codethon_project_dart/weatherIcon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -656,6 +658,26 @@ class _Screen3State extends State<Screen3> {
     }
   }
 
+  Future<Set<Marker>> leerJson() async {
+    // Carga el archivo JSON como un Future<String>
+    final jsonString = await rootBundle.loadString('files/contenedores.json');
+
+    // Decodifica la cadena JSON en una List<Map<String, dynamic>>
+    final List<dynamic> jsonData = jsonDecode(jsonString);
+
+    // Convierte la lista de datos JSON en un Set<Marker>
+    final Set<Marker> markers = jsonData.map((json) {
+      final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
+      return Marker(
+        markerId: MarkerId(json['objectid'].toString()),
+        position: position,
+        infoWindow: InfoWindow(title: json['empresa']),
+      );
+    }).toSet();
+
+    return markers;
+  }
+
   void stopActivity() {
     setState(() {
       _isActivityInProgress = false;
@@ -969,21 +991,27 @@ class _Screen2State extends State<Screen2> {
     _loadMapStyle();
   }
 
-  Future<Set<Marker>> leerJson() async {
-    // Load the JSON file as a string
-    final jsonString = await rootBundle.loadString('files/contenidors-de-roba-contenedores-de-ropa.json');
 
-    // Decode the JSON string into a List<Map<String, dynamic>>
+  Future<Set<Marker>> leerJson() async {
+    // Carga el archivo JSON como un Future<String>
+    final jsonString = await rootBundle.loadString('files/contenedores.json');
+
+    // Decodifica la cadena JSON en una List<Map<String, dynamic>>
     final List<dynamic> jsonData = jsonDecode(jsonString);
 
-    return jsonData.map((json) {
+    // Convierte la lista de datos JSON en un Set<Marker>
+    final Set<Marker> markers = jsonData.map((json) {
       final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
       return Marker(
         markerId: MarkerId(json['objectid'].toString()),
         position: position,
         infoWindow: InfoWindow(title: json['empresa']),
-      );}).toSet();
+      );
+    }).toSet();
+
+    return markers;
   }
+
 
   @override
   void dispose() {
@@ -1007,31 +1035,39 @@ class _Screen2State extends State<Screen2> {
     _positionStreamSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
             (Position position) {
           _updateMarkerOnMap(position);
+          pos(position);
         }
     );
   }
 
+  LatLng pos(Position position) {
+    LatLng newPosition = LatLng(position.latitude, position.longitude);
+    return newPosition;
+  }
   void _updateMarkerOnMap(Position position) {
     LatLng newPosition = LatLng(position.latitude, position.longitude);
     if (!mounted || _mapController == null) return;
 
     setState(() {
-      _markers = {
+      _markers.add(
         Marker(
           markerId: const MarkerId('userLocation'),
           position: newPosition,
           infoWindow: const InfoWindow(title: 'Tu Ubicación'),
-        ),
-      };
+        ),);
     });
 
     _mapController!.animateCamera(CameraUpdate.newLatLngZoom(newPosition, _zoomLevel));
   }
 
-  void _onMapCreated(GoogleMapController controller) {
+  void _onMapCreated(GoogleMapController controller) async{
+    _markers = await leerJson();
     _mapController = controller;
     _loadMapStyle();  // Asegurarse que el estilo se carga con el mapa.
     _startListeningToLocation();  // Comenzar a escuchar la ubicación después de que el mapa está listo.
+    LatLng Posit = LatLng(39.45085565994616 ,-0.3789885406740058 );
+
+
   }
 
   @override
