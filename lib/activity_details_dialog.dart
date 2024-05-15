@@ -2,7 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'ActivityTimer.dart';
-
+import 'package:provider/provider.dart';
+import 'pointsManager.dart';
 
 
 
@@ -231,7 +232,8 @@ class ActivityDetailsDialog {
       int pointsPerUnit,
       String unit,
 
-      VoidCallback onStartActivity) {  // Añadir el callback aquí
+      VoidCallback onStartActivity) {// Añadir el callback aquí
+    final pointsManager = Provider.of<PointsManager>(context, listen: false);
 
     List<String> environmentalBenefits = getEnvironmentalBenefits(activityName);
     String randomBenefit = environmentalBenefits.isNotEmpty ? (environmentalBenefits..shuffle()).first : "No hay beneficios ambientales conocidos.";
@@ -278,17 +280,15 @@ class ActivityDetailsDialog {
         ),
         actions: <Widget>[
           CupertinoDialogAction(
-              isDefaultAction: true,
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.pop(context);
-              }
+            isDefaultAction: true,
+            child: const Text('Cancelar'),
+            onPressed: () => Navigator.pop(context),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
             child: const Text('Iniciar'),
             onPressed: () {
-              // Aquí se llama al callback en lugar de iniciar el timer directamente
+              pointsManager.addPoints(activityName, 1);  // Suma 5 puntos cuando la actividad se inicia
               onStartActivity();
               Navigator.pop(context);
             },
@@ -297,6 +297,7 @@ class ActivityDetailsDialog {
       ),
     );
   }
+
 
 
   static List<String> getEnvironmentalBenefits(String activityName) {

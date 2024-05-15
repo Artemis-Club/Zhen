@@ -20,6 +20,7 @@ import 'ActivityTimer.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+//import 'UserProfile.dart'; // Custom class for user profile, replace with your actual import if different
 
 
 
@@ -35,12 +36,14 @@ void main() async {
   await Permission.location.request();
 
   //runApp(MyApp(dbService: dbService));}
-  runApp(
-    ChangeNotifierProvider<UserProfile>(
-      create: (_) => UserProfile('BELLINGHAM', AssetImage('images/FotoPerfil.png')),
-      child: MyApp(dbService: dbService),
-    ),
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => PointsManager()),
+      ChangeNotifierProvider(create: (_) => UserProfile('Nombre de Usuario', AssetImage('images/UsuarioSinFoto.png'))),
+
+    ],
+    child: MyApp(dbService: dbService),
+  ));
 }
 
 
@@ -74,7 +77,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 1;
   final List<Widget> _children = [
-    const Screen3(),
+     Screen3(),
     const Screen2(),
     Screen4(),
   ];
@@ -209,322 +212,6 @@ class _Screen2State extends State<Screen2> {
 
 
 
-//ULTIMA IMPLEMENTACION SIN FALLOS PERO CAQUITA CON EL TIMER
-/*class Screen3 extends StatefulWidget {
-  const Screen3({Key? key}) : super(key: key);
-
-  @override
-  _Screen3State createState() => _Screen3State();
-}
-
-class _Screen3State extends State<Screen3> {
-  bool _isActivityInProgress = false;
-  String _currentActivityName = '';
-  bool _isKilometers = false;
-
-  void startActivity(String activityName, bool isKilometers) {
-    if (!_isActivityInProgress) {
-      setState(() {
-        _isActivityInProgress = true;
-        _currentActivityName = activityName;
-        _isKilometers = isKilometers;
-      });
-    }
-  }
-
-  void stopActivity() {
-    setState(() {
-      _isActivityInProgress = false;
-    });
-  }
-
-  void resetActivity() {
-    setState(() {
-      _isActivityInProgress = false;
-      _currentActivityName = '';
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final screen4 = screen4StateKey.currentState;
-    if (screen4 == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final pointsManager = PointsManager();
-    List<Map<String, dynamic>> rewards = [
-      {"name": "Camiseta oficial del Valencia CF", "imagePath": "images/CamisetaVal1.png", "targetPoints": 3000},
-      {"name": "2 entradas para Oceanografic", "imagePath": "images/Oceanografic.png", "targetPoints": 5000},
-    ];
-
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Nueva Actividad'),
-        backgroundColor: Color(0xFFF5F5DC),
-      ),
-      backgroundColor: const Color(0xFFF5F5DC),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.indigoAccent,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: screen4.profileImage ?? const AssetImage('images/UsuarioSinFoto.png'),
-                              radius: 25,
-                            ),
-                            Text(
-                              screen4.username,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '${pointsManager.points} ',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-                                ),
-                                Image.asset(
-                                  'images/Naranjitos.png',
-                                  width: 24,
-                                  height: 24,
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: FutureBuilder<String?>(
-                      future: weather(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          // Usa el operador?? para proporcionar un valor predeterminado en caso de que snapshot.data sea nulo.
-                          if(snapshot.data == "few clouds" || snapshot.data == "scattered clouds" || snapshot.data == "broken clouds" || snapshot.data == "overcast clouds"){
-                            return  Column(
-                              children: [
-                                Image.asset(
-                                  "images/nublado.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                Text("Nublado")
-
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "shower rain" || snapshot.data == "rain"){
-                            return Column(
-                              children: [
-                                Image.asset(
-                                  "images/lloviendo.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                Text("Lluvia")
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "mist"){
-                            return  Column(
-                              children: [
-                                Image.asset(
-                                  "images/niebla.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                Text("Niebla")
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "snow"){
-                            return  Column(
-                              children: [
-                                Image.asset(
-                                  "images/nievee.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                Text("Nevando")
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "thunderstorm"){
-                            return  Column(
-                              children: [
-                                Image.asset(
-                                  "images/tormenta.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                Text("Tormenta")
-                              ],
-                            );
-                          }
-                          else if(snapshot.data == "clear sky"){
-                            return  Column(
-                              children: [
-                                Image.asset(
-                                  "images/soleado.png",
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                Text("Cielo despejado")
-                              ],
-                            );
-                          }
-                          return Text(snapshot.data?? 'Cargando...');
-                        } else if (snapshot.hasError) {
-                          return Text('${snapshot.error}');
-
-                        }
-                        // Por defecto, muestra un indicador de carga.
-                        return const CircularProgressIndicator();
-                      },
-                    ),
-
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              if (_isActivityInProgress)
-                ActivityInProgress(
-                  activityName: _currentActivityName,
-                  isKilometers: _isKilometers,
-                  onStop: stopActivity,
-                  onReset: resetActivity,
-                ),
-              const SizedBox(height: 16),
-              GridView.count(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                children: List.generate(4, (index) => _buildActivityCard(index, context)),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.teal[100],
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  children: rewards.map((reward) => buildRewardProgress(reward, pointsManager.points)).toList(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildRewardProgress(Map<String, dynamic> reward, int currentPoints) {
-    double progress = (currentPoints / reward['targetPoints']).clamp(0.0, 1.0);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("${reward['name']} (${currentPoints}/${reward['targetPoints']})",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            Image.asset(reward['imagePath'], width: 50, height: 50),
-          ],
-        ),
-        LinearProgressIndicator(
-          value: progress,
-          backgroundColor: Colors.grey[300],
-          color: Colors.green,
-        ),
-        SizedBox(height: 10),
-      ],
-    );
-  }
-
-  Widget _buildActivityCard(int index, BuildContext context) {
-    List<String> titles = ["BICICLETAS", "TRANSPORTE PUBLICO", "COCHE ELECTRICO", "ANDANDO"];
-    List<String> activityNames = ["Montar en bicicleta", "Usar transporte público", "Usar coche eléctrico", "Salir a andar"];
-    List<String> imageNames = [
-      'images/Bicicletas.png',
-      'images/TransportePublico.png',
-      'images/CocheElectrico.png',
-      'images/Andando.png'
-    ];
-    PointsManager pointsManager = PointsManager();
-
-    return GestureDetector(
-      onTap: () {
-        // Crear una nueva instancia de ActivityTimerState para manejar el timer
-        ActivityTimerState timerState = ActivityTimerState(); // Asumimos que esta es la forma correcta de obtener/crear una instancia.
-
-        // Mostrar el diálogo y pasar el estado del timer
-        ActivityDetailsDialog.show(
-            context,
-            titles[index],
-            activityNames[index],
-            pointsManager.getPointsForActivity(activityNames[index]),
-            pointsManager.getUnitForActivity(activityNames[index]),
-            timerState
-        );
-
-        // Nota: Ya no necesitamos llamar a startTimer aquí porque `ActivityDetailsDialog` manejará esto
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey, width: 1),
-          image: DecorationImage(
-            image: AssetImage(imageNames[index]),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F5DC),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                titles[index],
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-*/
-
 
 class Screen3 extends StatefulWidget {
   const Screen3({Key? key}) : super(key: key);
@@ -577,12 +264,13 @@ class _Screen3State extends State<Screen3> {
   @override
   Widget build(BuildContext context) {
     //UserProfile userProfile = Provider.of<UserProfile>(context, listen: true);
+    final pointsManager = Provider.of<PointsManager>(context);
     return Consumer<UserProfile>(
         builder: (context, userProfile, child) {
 
 
 
-    final pointsManager = PointsManager();
+    //final pointsManager = PointsManager();
     List<Map<String, dynamic>> rewards = [
       {"name": "Camiseta oficial del Valencia CF", "imagePath": "images/CamisetaVal1.png", "targetPoints": 3000},
       {"name": "2 entradas para Oceanografic", "imagePath": "images/Oceanografic.png", "targetPoints": 5000},
@@ -629,8 +317,10 @@ class _Screen3State extends State<Screen3> {
                             Row(
                               children: [
                                 Text(
-                                  '${pointsManager.points} ',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                                  '${325 + pointsManager.points} ',
+                                  //'325',
+                                  //style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+                                  style: const TextStyle(fontSize: 18, color: Colors.white),
                                 ),
                                 Image.asset(
                                   'images/Naranjitos.png',
@@ -769,7 +459,8 @@ class _Screen3State extends State<Screen3> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
-                  children: rewards.map((reward) => buildRewardProgress(reward, pointsManager.points)).toList(),
+                  children: rewards.map((reward) => buildRewardProgress(reward, (325+pointsManager.points))).toList(),
+                  //children: rewards.map((reward) => buildRewardProgress(reward, 325)).toList(),
                 ),
               ),
                   ],
@@ -869,6 +560,7 @@ class _Screen3State extends State<Screen3> {
     );
   }
 }
+
 
 
 
@@ -1286,7 +978,7 @@ class _Screen4State extends State<Screen4> {
   int _hoveringIndex = -1; // Para manejar el efecto de sombra en las opciones de lista
   String get username => _username;
   dynamic get profileImage => _profileImage;
-  void _showUsernameDialog() {
+  /*void _showUsernameDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1338,7 +1030,65 @@ class _Screen4State extends State<Screen4> {
         );
       },
     );
+  }*/
+  void _showUsernameDialog() {
+    TextEditingController usernameController = TextEditingController(text: Provider.of<UserProfile>(context, listen: false).username);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editar nombre de Usuario'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Nuevo nombre de usuario',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Cierra el diálogo sin guardar cambios
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.black,
+                    ),
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Provider.of<UserProfile>(context, listen: false).setUsername(usernameController.text);
+                      Provider.of<UserProfile>(context, listen: false).setProfileImage(_profileImage);
+                      // Actualiza el estado local después de modificar el estado global.
+                      setState(() {
+                        _username = usernameController.text;
+                        // Supongamos que también actualizas la imagen aquí.
+                      });
+                      Navigator.of(context).pop(); // Cierra el diálogo y guarda los cambios
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.black,
+                    ),
+                    child: const Text('Confirmar'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,7 @@
-class PointsManager {
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+
+/*class PointsManager {
   int _points = 0;
 
   int get points => _points;
@@ -28,7 +31,22 @@ class PointsManager {
   void resetPoints() {
     _points = 0;
   }
+*/
+class PointsManager extends ChangeNotifier {
+  int _points = 0;
+  int get points => _points;
 
+  void addPoints(String activityName, int units) {
+    int pointsToAdd = pointsPerActivity[activityName] ?? 1;
+    //_points += units * pointsToAdd;
+    _points += units * pointsToAdd;
+    notifyListeners(); // Notifica a los consumidores del cambio
+  }
+
+  void resetPoints() {
+    _points = 0;
+    notifyListeners();
+  }
   Map<String, int> pointsPerActivity = {
     "Montar en bicicleta": 5,
     "Usar transporte público": 10,
