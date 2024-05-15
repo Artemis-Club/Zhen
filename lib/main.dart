@@ -882,6 +882,7 @@ class Screen2 extends StatefulWidget {
 }
 
 class _Screen2State extends State<Screen2> {
+  bool _botonHabilitado = false;
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
   final double _zoomLevel = 18.0;  // Nivel de zoom inicial deseado.
@@ -900,14 +901,29 @@ class _Screen2State extends State<Screen2> {
     // Decode the JSON string into a List<Map<String, dynamic>>
     final List<dynamic> jsonData = jsonDecode(jsonString);
 
-    return jsonData.map((json) {
+    Position posi = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+      timeLimit: Duration(seconds: 30),
+    );
+
+
+
+    final Set<Marker> markers = jsonData.map((json) {
       final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
+      if(json['geo_point_2d']['lat'] + 1 > posi.latitude && json['geo_point_2d']['lat'] - 1 < posi.latitude && json['geo_point_2d']['lon'] + 1>posi.longitude &&json['geo_point_2d']['lon'] - 1<posi.longitude){
+        _botonHabilitado=true;
+      }
       return Marker(
         markerId: MarkerId(json['objectid'].toString()),
         position: position,
         infoWindow: InfoWindow(title: json['empresa']),
-      );}).toSet();
+      );
+    }).toSet();
+
+    return markers;
   }
+
+
 
   @override
   void dispose() {
@@ -962,15 +978,32 @@ class _Screen2State extends State<Screen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        markers: _markers,
-        initialCameraPosition: CameraPosition(
-          target: const LatLng(0, 0),  // Punto inicial genérico.
-          zoom: _zoomLevel,
-        ),
-        onMapCreated: _onMapCreated,
+      body: Stack(
+        children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            markers: _markers,
+            initialCameraPosition: CameraPosition(
+              target: const LatLng(0, 0),  // Punto inicial genérico.
+              zoom: _zoomLevel,
+            ),
+            onMapCreated: _onMapCreated,
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: ElevatedButton(
+              onPressed: _botonHabilitado? () {
+                // Acción del botón
+                _botonHabilitado=false;
+                Text("Vuevle en 24 horas para conseguir más");
+                print('Botón presionado');
+              } : null,
+              child: Text("Haz click para conseguir 200 puntos"),
+            ),
+          ),
+        ],
       ),
     );
   }

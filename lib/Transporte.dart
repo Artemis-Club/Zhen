@@ -123,4 +123,30 @@ infoWindow: InfoWindow(title: json['empresa']),
 );}).toSet();
 }
 
+
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: GoogleMap(
+      mapType: MapType.normal,
+      myLocationEnabled: true,
+      markers: _markers,
+      initialCameraPosition: CameraPosition(
+        target: const LatLng(0, 0),  // Punto inicial genérico.
+        zoom: _zoomLevel,
+      ),
+      onMapCreated: _onMapCreated,
+    ),
+    child: ElevatedButton(
+      onPressed: _botonHabilitado? () {
+        // Acción del botón
+        print('Botón presionado');
+      } : null,
+      child: Text("Haz click para conseguir 200 puntos"),
+    ),
+  );
+
+}
+
 */
