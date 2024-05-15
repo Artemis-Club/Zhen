@@ -101,6 +101,7 @@ flutter:
      - images/tarjetaregalo.png
      - files/contenedores.json
      - images/punto.png
+     - images/contenedorIcon.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

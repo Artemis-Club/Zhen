@@ -593,6 +593,9 @@ class _Screen2State extends State<Screen2> {
     // Decode the JSON string into a List<Map<String, dynamic>>
     final List<dynamic> jsonData = jsonDecode(jsonString);
 
+    BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(48, 48)), // Configuración de la imagen
+      'images/contenedorIcon.png',);
+
     Position posi = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
       timeLimit: Duration(seconds: 30),
@@ -605,10 +608,11 @@ class _Screen2State extends State<Screen2> {
       if(json['geo_point_2d']['lat'] + 0.001 > posi.latitude && json['geo_point_2d']['lat'] - 0.001 < posi.latitude && json['geo_point_2d']['lon'] + 0.001>posi.longitude &&json['geo_point_2d']['lon'] - 0.001<posi.longitude){
         _botonHabilitado=true;
       }
+
       return Marker(
         markerId: MarkerId(json['objectid'].toString()),
         position: position,
-        infoWindow: InfoWindow(title: json['empresa']),
+        icon: customIcon,
       );
     }).toSet();
 
@@ -643,7 +647,7 @@ class _Screen2State extends State<Screen2> {
     );
   }
 
-  void _updateMarkerOnMap(Position position) {
+  void _updateMarkerOnMap(Position position) async{
     LatLng newPosition = LatLng(position.latitude, position.longitude);
     if (!mounted || _mapController == null) return;
 
@@ -652,7 +656,7 @@ class _Screen2State extends State<Screen2> {
       _markers.add(Marker(
         markerId: const MarkerId('userLocation'),
         position: newPosition,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        infoWindow: InfoWindow(title:"Tu ubicación"),
       ));
     });
 
