@@ -22,7 +22,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 //import 'UserProfile.dart'; // Custom class for user profile, replace with your actual import if different
 
-
+int point = 0;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -317,7 +317,7 @@ class _Screen3State extends State<Screen3> {
                             Row(
                               children: [
                                 Text(
-                                  '${325 + pointsManager.points} ',
+                                  '${325 + pointsManager.points+point} ',
                                   //'325',
                                   //style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
                                   style: const TextStyle(fontSize: 18, color: Colors.white),
@@ -648,12 +648,12 @@ class _Screen2State extends State<Screen2> {
     if (!mounted || _mapController == null) return;
 
     setState(() {
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('userLocation'),
-          position: newPosition,
-          infoWindow: const InfoWindow(title: 'Tu Ubicación'),
-        ),);
+
+      _markers.add(Marker(
+        markerId: const MarkerId('userLocation'),
+        position: newPosition,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      ));
     });
 
     _mapController!.animateCamera(CameraUpdate.newLatLngZoom(newPosition, _zoomLevel));
@@ -689,10 +689,11 @@ class _Screen2State extends State<Screen2> {
               onPressed: _botonHabilitado? () {
                 // Acción del botón
                 _botonHabilitado=false;
+                point=point +50;
                 Text("Vuevle en 24 horas para conseguir más");
                 print('Botón presionado');
               } : null,
-              child: Text("Haz click para conseguir 200 puntos"),
+              child: Text("Haz click para conseguir 50 puntos"),
             ),
           ),
         ],
