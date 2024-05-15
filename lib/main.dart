@@ -692,7 +692,7 @@ class _Screen2State extends State<Screen2> {
       MaterialColor c = Colors.blueGrey;
       z="Vuelve en 24 horas para conseguir más";
     }*/
-    String text= "Haga click aquí para reclamar tus naranjitos como recompensa por tu reciclaje";
+    String text= "Haga click aquí para reclamar tus Naranjitos como recompensa por tu reciclaje";
     if(pulsado==true){text= "Vuelva dentro de 24 horas";}
     return Scaffold(
       body: Stack(
@@ -708,7 +708,7 @@ class _Screen2State extends State<Screen2> {
             onMapCreated: _onMapCreated,
           ),
           Positioned(
-            bottom: 550,
+            bottom: 600,
             right: 200,
             child: ElevatedButton(
               onPressed: _botonHabilitado? () {
@@ -720,6 +720,7 @@ class _Screen2State extends State<Screen2> {
               } : null,
 
               child: Text(text),
+
             ),
           ),
         ],
