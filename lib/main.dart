@@ -687,7 +687,7 @@ class _Screen2State extends State<Screen2> {
             onMapCreated: _onMapCreated,
           ),
           Positioned(
-            bottom: 20,
+            bottom: 500,
             right: 20,
             child: ElevatedButton(
               onPressed: _botonHabilitado? () {
