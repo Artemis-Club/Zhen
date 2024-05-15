@@ -610,10 +610,10 @@ class _Screen2State extends State<Screen2> {
           json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
 
       if(pulsado==false){
-        if (json['geo_point_2d']['lat'] + 0.1 > posi.latitude &&
-           json['geo_point_2d']['lat'] - 0.1 < posi.latitude &&
-           json['geo_point_2d']['lon'] + 0.1 > posi.longitude &&
-           json['geo_point_2d']['lon'] - 0.1 < posi.longitude) {
+        if (json['geo_point_2d']['lat'] + 0.001 > posi.latitude &&
+           json['geo_point_2d']['lat'] - 0.001 < posi.latitude &&
+           json['geo_point_2d']['lon'] + 0.001 > posi.longitude &&
+           json['geo_point_2d']['lon'] - 0.001 < posi.longitude) {
           _botonHabilitado = true;
       }
     }
