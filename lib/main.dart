@@ -23,6 +23,7 @@ import 'package:provider/provider.dart';
 //import 'UserProfile.dart'; // Custom class for user profile, replace with your actual import if different
 
 int point = 0;
+bool pulsado= false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -575,6 +576,7 @@ class Screen2 extends StatefulWidget {
 
 class _Screen2State extends State<Screen2> {
   bool _botonHabilitado = false;
+
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
   final double _zoomLevel = 18.0;  // Nivel de zoom inicial deseado.
@@ -604,10 +606,17 @@ class _Screen2State extends State<Screen2> {
 
 
     final Set<Marker> markers = jsonData.map((json) {
-      final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
-      if(json['geo_point_2d']['lat'] + 0.001 > posi.latitude && json['geo_point_2d']['lat'] - 0.001 < posi.latitude && json['geo_point_2d']['lon'] + 0.001>posi.longitude &&json['geo_point_2d']['lon'] - 0.001<posi.longitude){
-        _botonHabilitado=true;
+      final position = LatLng(
+          json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
+
+      if(pulsado==false){
+        if (json['geo_point_2d']['lat'] + 0.1 > posi.latitude &&
+           json['geo_point_2d']['lat'] - 0.1 < posi.latitude &&
+           json['geo_point_2d']['lon'] + 0.1 > posi.longitude &&
+           json['geo_point_2d']['lon'] - 0.1 < posi.longitude) {
+          _botonHabilitado = true;
       }
+    }
 
       return Marker(
         markerId: MarkerId(json['objectid'].toString()),
@@ -673,6 +682,18 @@ class _Screen2State extends State<Screen2> {
 
   @override
   Widget build(BuildContext context) {
+    /*String z="";
+    MaterialColor c=Colors.brown;
+    if(_botonHabilitado == true){
+      c= Colors.brown;
+      z = "Haz click para conseguir 50 puntos";
+    }
+    else{
+      MaterialColor c = Colors.blueGrey;
+      z="Vuelve en 24 horas para conseguir más";
+    }*/
+    String text= "Haga click aquí para reclamar tus naranjitos como recompensa por tu reciclaje";
+    if(pulsado==true){text= "Vuelva dentro de 24 horas";}
     return Scaffold(
       body: Stack(
         children: [
@@ -687,17 +708,18 @@ class _Screen2State extends State<Screen2> {
             onMapCreated: _onMapCreated,
           ),
           Positioned(
-            bottom: 500,
-            right: 20,
+            bottom: 550,
+            right: 200,
             child: ElevatedButton(
               onPressed: _botonHabilitado? () {
                 // Acción del botón
-                _botonHabilitado=false;
-                point=point +50;
-                Text("Vuevle en 24 horas para conseguir más");
+                _botonHabilitado = false;
+                pulsado=true;
+                point = point + 50;
                 print('Botón presionado');
               } : null,
-              child: Text("Haz click para conseguir 50 puntos"),
+
+              child: Text(text),
             ),
           ),
         ],
