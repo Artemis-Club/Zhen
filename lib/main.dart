@@ -895,7 +895,7 @@ class _Screen2State extends State<Screen2> {
 
   Future<Set<Marker>> leerJson() async {
     // Load the JSON file as a string
-    final jsonString = await rootBundle.loadString('files/contenidors-de-roba-contenedores-de-ropa.json');
+    final jsonString = await rootBundle.loadString('files/contenedores.json');
 
     // Decode the JSON string into a List<Map<String, dynamic>>
     final List<dynamic> jsonData = jsonDecode(jsonString);
@@ -940,22 +940,23 @@ class _Screen2State extends State<Screen2> {
     if (!mounted || _mapController == null) return;
 
     setState(() {
-      _markers = {
+      _markers.add(
         Marker(
           markerId: const MarkerId('userLocation'),
           position: newPosition,
           infoWindow: const InfoWindow(title: 'Tu Ubicación'),
-        ),
-      };
+        ),);
     });
 
     _mapController!.animateCamera(CameraUpdate.newLatLngZoom(newPosition, _zoomLevel));
   }
 
-  void _onMapCreated(GoogleMapController controller) {
+  void _onMapCreated(GoogleMapController controller) async{
+    _markers = await leerJson();
     _mapController = controller;
     _loadMapStyle();  // Asegurarse que el estilo se carga con el mapa.
     _startListeningToLocation();  // Comenzar a escuchar la ubicación después de que el mapa está listo.
+
   }
 
   @override

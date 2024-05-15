@@ -98,6 +98,7 @@ flutter:
      - images/FotoPerfil.png
      - images/bonometro.png
      - images/tarjetaregalo.png
+     - files/contenedores.json
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
