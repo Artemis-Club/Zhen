@@ -602,7 +602,7 @@ class _Screen2State extends State<Screen2> {
 
     final Set<Marker> markers = jsonData.map((json) {
       final position = LatLng(json['geo_point_2d']['lat'], json['geo_point_2d']['lon']);
-      if(json['geo_point_2d']['lat'] + 1 > posi.latitude && json['geo_point_2d']['lat'] - 1 < posi.latitude && json['geo_point_2d']['lon'] + 1>posi.longitude &&json['geo_point_2d']['lon'] - 1<posi.longitude){
+      if(json['geo_point_2d']['lat'] + 0.001 > posi.latitude && json['geo_point_2d']['lat'] - 0.001 < posi.latitude && json['geo_point_2d']['lon'] + 0.001>posi.longitude &&json['geo_point_2d']['lon'] - 0.001<posi.longitude){
         _botonHabilitado=true;
       }
       return Marker(
